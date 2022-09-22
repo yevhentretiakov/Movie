@@ -12,6 +12,7 @@ import Alamofire
 enum ApiEndpoint {
     case fetchPopularMovies(page: Int)
     case fetchGenres
+    case fetchMovieDetails(id: Int)
     static let apiKey = "37583bb7971b4bc83cd1317e9d98a299"
     static let baseURL = "https://api.themoviedb.org/3/"
 }
@@ -34,6 +35,8 @@ extension ApiEndpoint: HTTPRequest {
             return ApiEndpoint.baseURL
         case .fetchGenres:
             return ApiEndpoint.baseURL
+        case .fetchMovieDetails(_):
+            return ApiEndpoint.baseURL
         }
     }
     var path: String {
@@ -42,6 +45,8 @@ extension ApiEndpoint: HTTPRequest {
             return "\(url)movie/popular?api_key=\(ApiEndpoint.apiKey)&language=en-US&page=\(page)"
         case .fetchGenres:
             return "\(url)genre/movie/list?api_key=\(ApiEndpoint.apiKey)&language=en-US"
+        case .fetchMovieDetails(let id):
+            return "\(url)movie/\(id)?api_key=\(ApiEndpoint.apiKey)&language=en-US"
         }
     }
     var method: HTTPMethod {
@@ -49,6 +54,8 @@ extension ApiEndpoint: HTTPRequest {
         case .fetchPopularMovies:
             return .get
         case .fetchGenres:
+            return .get
+        case .fetchMovieDetails(_):
             return .get
         }
     }
@@ -58,6 +65,8 @@ extension ApiEndpoint: HTTPRequest {
             return nil
         case .fetchGenres:
             return nil
+        case .fetchMovieDetails(_):
+            return nil
         }
     }
     var parameters: Parameters? {
@@ -66,6 +75,8 @@ extension ApiEndpoint: HTTPRequest {
             return nil
         case .fetchGenres:
             return nil
+        case .fetchMovieDetails(_):
+            return nil
         }
     }
     var encoding: URLEncoding {
@@ -73,6 +84,8 @@ extension ApiEndpoint: HTTPRequest {
         case .fetchPopularMovies:
             return .default
         case .fetchGenres:
+            return .default
+        case .fetchMovieDetails(_):
             return .default
         }
     }

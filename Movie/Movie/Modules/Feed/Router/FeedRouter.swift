@@ -9,11 +9,13 @@ import Foundation
 
 // MARK: - Protocols
 protocol FeedRouter {
-    func showMovieDetails()
+    func showMovieDetails(with id: Int)
 }
 
 final class DefaultFeedRouter: DefaultBaseRouter, FeedRouter {
-    func showMovieDetails() {
-      
+    // MARK: - Internal Methods
+    func showMovieDetails(with id: Int) {
+        let viewController = DefaultDetailBuilder().createDetailModule(withMovieId: id)
+        show(viewController: viewController, isModal: false, animated: true)
     }
 }

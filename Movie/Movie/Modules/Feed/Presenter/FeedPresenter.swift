@@ -17,6 +17,7 @@ protocol FeedPresenter {
     func viewDidLoad()
     func getItemsCount() -> Int
     func getItem(at index: Int) -> MovieUIModel
+    func movieTapped(with index: Int)
 }
 
 final class DefaultFeedPresenter: FeedPresenter {
@@ -47,6 +48,10 @@ final class DefaultFeedPresenter: FeedPresenter {
         return movies[index]
     }
     
+    func movieTapped(with index: Int) {
+        router.showMovieDetails(with: movies[index].id)
+    }
+    
     // MARK: - Private Methods
     private func fetchPopularMovies(on page: Int) {
         repository.fetchPopularMovies(on: page) { [weak self] result in
@@ -63,7 +68,7 @@ final class DefaultFeedPresenter: FeedPresenter {
                                      id: post.id,
                                      voteAverage: post.voteAverage,
                                      title: post.title,
-                                     posterPath: post.posterPath,
+                                            backdropPath: post.backdropPath,
                                      releaseDate: post.releaseDate)
                     })
                     DispatchQueue.main.async {

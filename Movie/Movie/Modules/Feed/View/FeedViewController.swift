@@ -43,7 +43,7 @@ final class FeedViewController: UIViewController {
         moviesTableView.delegate = self
         moviesTableView.dataSource = self
         MovieTableViewCell.registerNib(in: moviesTableView)
-        moviesTableView.rowHeight = 200
+        moviesTableView.rowHeight = 250
     }
     
     // MARK: - Layout Methods
@@ -72,7 +72,10 @@ extension FeedViewController: FeedView {
 
 // MARK: - UITableViewDelegate
 extension FeedViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        presenter.movieTapped(with: indexPath.row)
+        moviesTableView.deselectRow(at: indexPath, animated: true)
+    }
 }
 
 // MARK: - UITableViewDataSource

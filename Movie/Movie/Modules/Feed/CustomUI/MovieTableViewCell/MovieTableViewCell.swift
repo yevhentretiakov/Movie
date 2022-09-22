@@ -14,6 +14,7 @@ final class MovieTableViewCell: BaseTableViewCell {
     @IBOutlet private weak var genresLabel: UILabel!
     @IBOutlet private weak var ratingLabel: UILabel!
     @IBOutlet private weak var posterImageView: UIImageView!
+    @IBOutlet private weak var underlayView: UIView!
     
     // MARK: - Internal Methods
     func configure(with model: MovieUIModel) {
@@ -21,6 +22,14 @@ final class MovieTableViewCell: BaseTableViewCell {
         yearLabel.text = model.releaseDate
         ratingLabel.text = model.voteAverage.toString
         genresLabel.text = model.genres.joined(separator: ", ")
-        posterImageView.setImage(with: "https://image.tmdb.org/t/p/w500/\(model.posterPath)")
+        posterImageView.setImage(with: "https://image.tmdb.org/t/p/w500/\(model.backdropPath)")
+        setupShadow()
+    }
+    
+    private func setupShadow() {
+        underlayView.layer.shadowColor = UIColor.black.cgColor
+        underlayView.layer.shadowOpacity = 1
+        underlayView.layer.shadowOffset = .zero
+        underlayView.layer.shadowRadius = 3
     }
 }
