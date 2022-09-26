@@ -16,7 +16,7 @@ struct MovieNetworkModel: Codable {
     let id: Int
     let voteAverage: Double
     let title: String
-    let backdropPath: String
+    let backdropPath: String?
     let releaseDate: String
 }
 

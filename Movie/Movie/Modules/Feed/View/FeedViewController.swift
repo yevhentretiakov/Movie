@@ -16,6 +16,32 @@ final class FeedViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var sortActionSheet: UIAlertController = {
+        let alert = UIAlertController(title: "Sort Movies", message: "Please select an option", preferredStyle: .actionSheet)
+
+        alert.addAction(UIAlertAction(title: "Now Playing", style: .default) { action in
+            self.presenter.selectSortType(.playing)
+        })
+        alert.addAction(UIAlertAction(title: "Popular", style: .default) { action in
+            self.presenter.selectSortType(.popular)
+        })
+        alert.addAction(UIAlertAction(title: "Top Rated", style: .default) { action in
+            self.presenter.selectSortType(.topRated)
+        })
+        alert.addAction(UIAlertAction(title: "Upcoming", style: .default) { action in
+            self.presenter.selectSortType(.upcoming)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        return alert
+    }()
+    
+    private lazy var searchController: UISearchController = {
+        let searchController = UISearchController()
+        searchController.searchBar.autocapitalizationType = .none
+        return searchController
+    }()
+    
     // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +55,13 @@ final class FeedViewController: UIViewController {
         setupViewController()
         setupNavigationBar()
         setupMoviesTableView()
+        setupSortButton()
+        setupSearchBar()
+    }
+    
+    private func setupSearchBar() {
+        navigationItem.searchController = searchController
+        searchController.searchBar.delegate = self
     }
     
     private func setupNavigationBar() {
@@ -44,6 +77,17 @@ final class FeedViewController: UIViewController {
         moviesTableView.dataSource = self
         MovieTableViewCell.registerNib(in: moviesTableView)
         moviesTableView.rowHeight = 250
+    }
+    
+    private func setupSortButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(didTapSortButton))
+    }
+    
+    @objc private func didTapSortButton() {
+        self.present(sortActionSheet, animated: true)
     }
     
     // MARK: - Layout Methods
@@ -68,6 +112,19 @@ extension FeedViewController: FeedView {
     func showMessage(title: String, message: String) {
         showAlert(title: title, message: message)
     }
+    
+    func showLoadingIndicator() {
+        showLoadingView()
+    }
+    
+    func hideLoadingIndicator() {
+        hideLoadingView()
+    }
+    
+    func scrollToTop() {
+        let indexPath = IndexPath(row: 0, section: 0)
+        self.moviesTableView.scrollToRow(at: indexPath, at: .top, animated: false)
+    }
 }
 
 // MARK: - UITableViewDelegate
@@ -75,6 +132,16 @@ extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.movieTapped(with: indexPath.row)
         moviesTableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let offsetY = moviesTableView.contentOffset.y
+        let contentHeight = moviesTableView.contentSize.height
+        let height = moviesTableView.frame.size.height
+        
+        if offsetY > contentHeight - height {
+            presenter.loadMore()
+        }
     }
 }
 
@@ -89,5 +156,15 @@ extension FeedViewController: UITableViewDataSource {
         let item = presenter.getItem(at: indexPath.row)
         cell.configure(with: item)
         return cell
+    }
+}
+
+// MARK: - UISearchBarDelegate
+extension FeedViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        presenter.search(with: searchText)
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        presenter.cancelSearch()
     }
 }

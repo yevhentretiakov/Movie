@@ -11,6 +11,7 @@ import Foundation
 protocol DetailRouter {
     func showPoster(from path: String)
     func showVideo(from url: String)
+    func close()
 }
 
 final class DefaultDetailRouter: DefaultBaseRouter, DetailRouter {
@@ -25,5 +26,9 @@ final class DefaultDetailRouter: DefaultBaseRouter, DetailRouter {
         show(viewController: viewController, isModal: true, animated: true) {
             viewController.player?.play()
         }
+    }
+    
+    func close() {
+        close(animated: true)
     }
 }

@@ -20,7 +20,7 @@ final class DefaultPosterPresenter: PosterPresenter {
     // MARK: - Properties
     private weak var view: PosterView?
     private let router: PosterRouter
-    var posterPath: String
+    private var posterPath: String
     
     // MARK: - Life Cycle Methods
     init(view: PosterView, router: PosterRouter, posterPath: String) {
@@ -33,7 +33,4 @@ final class DefaultPosterPresenter: PosterPresenter {
     func viewDidLoad() {
         view?.configurePoster(with: posterPath)
     }
-    
-    // MARK: - Private Methods
-    
 }

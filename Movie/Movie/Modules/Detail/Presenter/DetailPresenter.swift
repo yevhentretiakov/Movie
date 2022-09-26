@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Protocols
-protocol DetailView: AnyObject {
+protocol DetailView: AnyObject, LoadingIndicator {
     func showMessage(title: String, message: String)
     func configureMovie(with model: MovieDetailModel)
 }
@@ -17,7 +17,7 @@ protocol DetailPresenter {
     func viewDidLoad()
     func didTapPosterImageView()
     func didTapTrailerButton()
-    func isContainTrailer() -> Bool
+    func isHaveTrailer() -> Bool
 }
 
 final class DefaultDetailPresenter: DetailPresenter {
@@ -26,7 +26,7 @@ final class DefaultDetailPresenter: DetailPresenter {
     private let router: DetailRouter
     private let repository: DetailRepository
     private let moviewId: Int
-    private var movieDetail: MovieDetailModel?
+    private var posterPath: String?
     private let trailerPath = "https://devstreaming-cdn.apple.com/videos/wwdc/2022/110929/1/E9996C71-5D71-46C7-BC47-4A26302DA7D6/cmaf.m3u8"
     
     // MARK: - Life Cycle Methods
@@ -43,7 +43,7 @@ final class DefaultDetailPresenter: DetailPresenter {
     }
     
     func didTapPosterImageView() {
-        if let posterPath = movieDetail?.posterPath {
+        if let posterPath = posterPath {
             router.showPoster(from: posterPath)
         }
     }
@@ -52,29 +52,39 @@ final class DefaultDetailPresenter: DetailPresenter {
         router.showVideo(from: trailerPath)
     }
     
-    func isContainTrailer() -> Bool {
+    func isHaveTrailer() -> Bool {
         return !trailerPath.isEmpty
     }
     
     // MARK: - Private Methods
     private func fetchMovieDetails(with id: Int) {
+        view?.showLoadingIndicator()
         repository.fetchMovieDetails(with: id) { [weak self] result in
             guard let self = self else { return }
+            self.view?.hideLoadingIndicator()
             switch result {
             case .success(let movie):
                 if let movie = movie {
-                    self.movieDetail = movie
+                    self.posterPath = movie.posterPath
                     DispatchQueue.main.async {
                         self.view?.configureMovie(with: movie)
                     }
                 }  else {
                     DispatchQueue.main.async {
-                        self.view?.showMessage(title: "Network Error", message: "Please try again later...")
+                        self.view?.showMessage(title: "Error", message: NetworkError.tryLater.rawValue)
                     }
                 }
             case .failure(let error):
-                DispatchQueue.main.async {
-                    self.view?.showMessage(title: "Network Error", message: error.localizedDescription)
+                if let err = error.underlyingError as? URLError, err.code  == URLError.Code.notConnectedToInternet
+                {
+                    self.router.close()
+                    DispatchQueue.main.async {
+                        self.view?.showMessage(title: "Error", message: NetworkError.offline.rawValue)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.view?.showMessage(title: "Error", message: error.localizedDescription)
+                    }
                 }
             }
         }

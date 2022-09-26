@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class DetailViewController: UIViewController {
     // MARK: - Properties
@@ -35,7 +36,8 @@ final class DetailViewController: UIViewController {
     }
     
     private func setupTrailerButton() {
-        if !presenter.isContainTrailer() {
+        trailerButton.makeRounded()
+        if !presenter.isHaveTrailer() {
             trailerButton.isHidden = true
         }
     }
@@ -49,7 +51,7 @@ extension DetailViewController: DetailView {
     
     func configureMovie(with model: MovieDetailModel) {
         title = model.title
-        posterImageView.setImage(with: "https://image.tmdb.org/t/p/w500/\(model.backdropPath)")
+        posterImageView.kf.setImage(with: URL(string: "\(ApiEndpoint.imagesBaseURL)\(model.backdropPath ?? "")"))
         titleLabel.text = model.title
         yearLabel.text = model.releaseDate
         genreLabel.text = model.genres.map({ $0.name }).joined(separator: ", ")
@@ -57,5 +59,13 @@ extension DetailViewController: DetailView {
         countryLabel.text = model.productionCountries.map({ $0.iso }).joined(separator: ", ")
         descriptionLabel.text = model.overview
         setupTrailerButton()
+    }
+    
+    func showLoadingIndicator() {
+        showLoadingView()
+    }
+    
+    func hideLoadingIndicator() {
+        hideLoadingView()
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class PosterViewController: UIViewController {
     // MARK: - Properties
@@ -30,7 +31,7 @@ final class PosterViewController: UIViewController {
 // MARK: - PosterView
 extension PosterViewController: PosterView {
     func configurePoster(with path: String) {
-        posterImageView.setImage(with: "https://image.tmdb.org/t/p/w500/\(path)")
+        posterImageView.kf.setImage(with: URL(string: "\(ApiEndpoint.imagesBaseURL)\(path)"))
     }
 }
 

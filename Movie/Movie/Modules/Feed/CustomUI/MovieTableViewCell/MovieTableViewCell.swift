@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class MovieTableViewCell: BaseTableViewCell {
     // MARK: - Properties
@@ -22,14 +23,7 @@ final class MovieTableViewCell: BaseTableViewCell {
         yearLabel.text = model.releaseDate
         ratingLabel.text = model.voteAverage.toString
         genresLabel.text = model.genres.joined(separator: ", ")
-        posterImageView.setImage(with: "https://image.tmdb.org/t/p/w500/\(model.backdropPath)")
-        setupShadow()
-    }
-    
-    private func setupShadow() {
-        underlayView.layer.shadowColor = UIColor.black.cgColor
-        underlayView.layer.shadowOpacity = 1
-        underlayView.layer.shadowOffset = .zero
-        underlayView.layer.shadowRadius = 3
+        posterImageView.kf.setImage(with: URL(string: "\(ApiEndpoint.imagesBaseURL)\(model.backdropPath)"))
+        underlayView.setShadow(color: .black, offset: .zero, opacity: 1, radius: 3)
     }
 }

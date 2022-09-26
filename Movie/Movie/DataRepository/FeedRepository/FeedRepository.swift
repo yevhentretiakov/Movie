@@ -13,7 +13,7 @@ typealias GenreModelResult = (Result<[GenreModel]?, AFError>) -> Void
 
 // MARK: - Protocols
 protocol FeedRepository {
-    func fetchPopularMovies(on page: Int, completion: @escaping MovieModelResult)
+    func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: @escaping MovieModelResult)
     func fetchGenres(completion: @escaping GenreModelResult)
 }
 
@@ -27,8 +27,8 @@ final class DefaultFeedRepository: FeedRepository {
     }
     
     // MARK: - Internal Methods
-    func fetchPopularMovies(on page: Int, completion: @escaping MovieModelResult) {
-        networkService.request(MoviesResponse.self, from: .fetchPopularMovies(page: page)) { response in
+    func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: @escaping MovieModelResult) {
+        networkService.request(MoviesResponse.self, from: .fetchMovies(sortType: sortType, page: page)) { response in
             if let error = response.error {
                 completion(.failure(error))
             } else {
