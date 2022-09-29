@@ -23,11 +23,12 @@ final class DefaultDetailRepository: DetailRepository {
     
     // MARK: - Methods
     func fetchMovieDetails(with id: Int, completion: @escaping MovieDetailsResult) {
-        networkService.request(MovieDetailModel.self, from: .fetchMovieDetails(id: id)) { response in
-            if let error = response.error {
+        networkService.request(MovieDetailModel.self, from: .fetchMovieDetails(id: id)) { result in
+            switch result {
+            case .success(let details):
+                completion(.success(details))
+            case .failure(let error):
                 completion(.failure(error))
-            } else {
-                completion(.success(response.value))
             }
         }
     }

@@ -24,21 +24,23 @@ final class DefaultFeedRepository: FeedRepository {
     
     // MARK: - Internal Methods
     func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: @escaping MovieResult) {
-        networkService.request(MoviesResponse.self, from: .fetchMovies(sortType: sortType, page: page)) { response in
-            if let error = response.error {
+        networkService.request(MoviesResponse.self, from: .fetchMovies(sortType: sortType, page: page)) { result in
+            switch result {
+            case .success(let data):
+                completion(.success(data?.results))
+            case .failure(let error):
                 completion(.failure(error))
-            } else {
-                completion(.success(response.value?.results))
             }
         }
     }
     
     func fetchGenres(completion: @escaping GenresResult) {
-        networkService.request(GenresResponse.self, from: .fetchGenres) { response in
-            if let error = response.error {
+        networkService.request(GenresResponse.self, from: .fetchGenres) { result in
+            switch result {
+            case .success(let data):
+                completion(.success(data?.genres))
+            case .failure(let error):
                 completion(.failure(error))
-            } else {
-                completion(.success(response.value?.genres))
             }
         }
     }
