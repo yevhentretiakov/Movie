@@ -15,14 +15,8 @@ enum MoviesSortType: String {
     case upcoming = "upcoming"
 }
 
-// MARK: - Indicator
-protocol LoadingIndicator {
-    func showLoadingIndicator()
-    func hideLoadingIndicator()
-}
-
 // MARK: - Protocols
-protocol FeedView: AnyObject, LoadingIndicator {
+protocol FeedView: AnyObject, LoadingView {
     func reloadData()
     func showMessage(title: String, message: String)
     func scrollToTop()
@@ -111,10 +105,10 @@ final class DefaultFeedPresenter: FeedPresenter {
     // MARK: - Private Methods
     private func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: EmptyBlock? = nil) {
         loadingData = true
-        view?.showLoadingIndicator()
+        view?.showLoadingView()
         repository.fetchMovies(with: sortType, on: page) { [weak self] result in
             guard let self = self else { return }
-            self.view?.hideLoadingIndicator()
+            self.view?.hideLoadingView()
             self.loadingData = false
             switch result {
             case .success(let movies):
@@ -142,15 +136,19 @@ final class DefaultFeedPresenter: FeedPresenter {
                 }
                 
             case .failure(let error):
-                if let err = error.underlyingError as? URLError, err.code  == URLError.Code.notConnectedToInternet
-                {
-                    DispatchQueue.main.async {
-                        self.view?.showMessage(title: "Error", message: NetworkError.offline.rawValue)
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.view?.showMessage(title: "Error", message: error.localizedDescription)
-                    }
+            
+//                if let err = error.underlyingError as? URLError, err.code  == URLError.Code.notConnectedToInternet
+//                {
+//                    DispatchQueue.main.async {
+//                        self.view?.showMessage(title: "Error", message: NetworkError.offline.rawValue)
+//                    }
+//                } else {
+//                    DispatchQueue.main.async {
+//                        self.view?.showMessage(title: "Error", message: error.localizedDescription)
+//                    }
+//                }
+                DispatchQueue.main.async {
+                    self.view?.showMessage(title: "Error", message: error.localizedDescription)
                 }
             }
             completion?()
@@ -158,10 +156,8 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     
     private func fetchGenres() {
-        view?.showLoadingIndicator()
         repository.fetchGenres { [weak self] result in
             guard let self = self else { return }
-            self.view?.hideLoadingIndicator()
             switch result {
             case .success(let genres):
                 if let genres = genres {

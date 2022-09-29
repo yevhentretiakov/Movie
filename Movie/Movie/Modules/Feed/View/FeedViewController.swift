@@ -10,6 +10,7 @@ import UIKit
 final class FeedViewController: UIViewController {
     // MARK: - Properties
     var presenter: FeedPresenter!
+    var loadingView: UIView?
     
     private lazy var moviesTableView: UITableView = {
         let tableView = UITableView()
@@ -113,17 +114,8 @@ extension FeedViewController: FeedView {
         showAlert(title: title, message: message)
     }
     
-    func showLoadingIndicator() {
-        showLoadingView()
-    }
-    
-    func hideLoadingIndicator() {
-        hideLoadingView()
-    }
-    
     func scrollToTop() {
-        let indexPath = IndexPath(row: 0, section: 0)
-        self.moviesTableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        self.moviesTableView.setContentOffset(.zero, animated: false)
     }
 }
 
@@ -168,3 +160,4 @@ extension FeedViewController: UISearchBarDelegate {
         presenter.cancelSearch()
     }
 }
+

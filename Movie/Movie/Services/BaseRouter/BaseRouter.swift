@@ -30,10 +30,7 @@ class DefaultBaseRouter: BaseRouter {
     // MARK: - Internal Methods
     func show(viewController: UIViewController, isModal: Bool, animated: Bool, completion: EmptyBlock? = nil) {
         if isModal {
-            let presentingViewController = navigationController ?? self.viewController
-            presentingViewController.present(viewController,
-                                             animated: animated,
-                                             completion: completion)
+            present(viewController: viewController, animated: animated, completion: completion)
         } else {
             navigationController?.pushViewController(viewController,
                                                      animated: animated,
@@ -61,6 +58,13 @@ class DefaultBaseRouter: BaseRouter {
     }
     
     // MARK: - Private Methods
+    private func present(viewController: UIViewController, animated: Bool, completion: EmptyBlock? = nil) {
+        let presentingViewController = navigationController ?? self.viewController
+        presentingViewController.present(viewController,
+                                         animated: animated,
+                                         completion: completion)
+    }
+    
     private func dismiss(animated: Bool, completion: EmptyBlock? = nil) {
         viewController.dismiss(animated: animated, completion: completion)
     }

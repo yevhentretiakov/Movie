@@ -8,11 +8,11 @@
 import Foundation
 import Alamofire
 
-typealias AFResponse<T> = (AFDataResponse<T>) -> Void
+typealias NetworkResponse<T> = (DataResponse<T, AFError>) -> Void
 
 // MARK: - Protocols
 protocol NetworkService {
-    func request<T: Decodable>(_ type: T.Type, from endpoint: ApiEndpoint, completion: @escaping AFResponse<T>)
+    func request<T: Decodable>(_ type: T.Type, from endpoint: ApiEndpoint, completion: @escaping NetworkResponse<T>)
 }
 
 final class DefaultNetworkService: NetworkService {
@@ -24,7 +24,7 @@ final class DefaultNetworkService: NetworkService {
     }()
     
     // MARK: - Methods
-    func request<T: Decodable>(_ type: T.Type, from endpoint: ApiEndpoint, completion: @escaping AFResponse<T>) {
+    func request<T: Decodable>(_ type: T.Type, from endpoint: ApiEndpoint, completion: @escaping NetworkResponse<T>) {
         AF.request(endpoint.path,
                    method: endpoint.method,
                    parameters: endpoint.parameters,

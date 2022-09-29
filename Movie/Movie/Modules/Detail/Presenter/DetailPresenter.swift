@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Protocols
-protocol DetailView: AnyObject, LoadingIndicator {
+protocol DetailView: AnyObject, LoadingView {
     func showMessage(title: String, message: String)
     func configureMovie(with model: MovieDetailModel)
 }
@@ -17,7 +17,6 @@ protocol DetailPresenter {
     func viewDidLoad()
     func didTapPosterImageView()
     func didTapTrailerButton()
-    func isHaveTrailer() -> Bool
 }
 
 final class DefaultDetailPresenter: DetailPresenter {
@@ -52,16 +51,12 @@ final class DefaultDetailPresenter: DetailPresenter {
         router.showVideo(from: trailerPath)
     }
     
-    func isHaveTrailer() -> Bool {
-        return !trailerPath.isEmpty
-    }
-    
     // MARK: - Private Methods
     private func fetchMovieDetails(with id: Int) {
-        view?.showLoadingIndicator()
+        view?.showLoadingView()
         repository.fetchMovieDetails(with: id) { [weak self] result in
             guard let self = self else { return }
-            self.view?.hideLoadingIndicator()
+            self.view?.hideLoadingView()
             switch result {
             case .success(let movie):
                 if let movie = movie {
@@ -75,16 +70,20 @@ final class DefaultDetailPresenter: DetailPresenter {
                     }
                 }
             case .failure(let error):
-                if let err = error.underlyingError as? URLError, err.code  == URLError.Code.notConnectedToInternet
-                {
-                    self.router.close()
-                    DispatchQueue.main.async {
-                        self.view?.showMessage(title: "Error", message: NetworkError.offline.rawValue)
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.view?.showMessage(title: "Error", message: error.localizedDescription)
-                    }
+//                if let err = error.underlyingError as? URLError, err.code  == URLError.Code.notConnectedToInternet
+//                {
+//                    DispatchQueue.main.async {
+//                        self.view?.showMessage(title: "Error", message: NetworkError.offline.rawValue)
+//                    }
+//                    self.router.close()
+//                } else {
+//                    DispatchQueue.main.async {
+//                        self.view?.showMessage(title: "Error", message: error.localizedDescription)
+//                    }
+//                }
+                
+                DispatchQueue.main.async {
+                    self.view?.showMessage(title: "Error", message: error.localizedDescription)
                 }
             }
         }

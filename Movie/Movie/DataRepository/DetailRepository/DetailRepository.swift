@@ -6,13 +6,10 @@
 //
 
 import Foundation
-import Alamofire
-
-typealias PostDetailModelResult = (Result<MovieDetailModel?, AFError>) -> Void
 
 // MARK: - Protocols
 protocol DetailRepository {
-    func fetchMovieDetails(with id: Int, completion: @escaping PostDetailModelResult)
+    func fetchMovieDetails(with id: Int, completion: @escaping MovieDetailsResult)
 }
 
 final class DefaultDetailRepository: DetailRepository {
@@ -25,7 +22,7 @@ final class DefaultDetailRepository: DetailRepository {
     }
     
     // MARK: - Methods
-    func fetchMovieDetails(with id: Int, completion: @escaping PostDetailModelResult) {
+    func fetchMovieDetails(with id: Int, completion: @escaping MovieDetailsResult) {
         networkService.request(MovieDetailModel.self, from: .fetchMovieDetails(id: id)) { response in
             if let error = response.error {
                 completion(.failure(error))

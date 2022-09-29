@@ -6,15 +6,11 @@
 //
 
 import UIKit
-import Alamofire
-
-typealias MovieModelResult = (Result<[MovieNetworkModel]?, AFError>) -> Void
-typealias GenreModelResult = (Result<[GenreModel]?, AFError>) -> Void
 
 // MARK: - Protocols
 protocol FeedRepository {
-    func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: @escaping MovieModelResult)
-    func fetchGenres(completion: @escaping GenreModelResult)
+    func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: @escaping MovieResult)
+    func fetchGenres(completion: @escaping GenresResult)
 }
 
 final class DefaultFeedRepository: FeedRepository {
@@ -27,7 +23,7 @@ final class DefaultFeedRepository: FeedRepository {
     }
     
     // MARK: - Internal Methods
-    func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: @escaping MovieModelResult) {
+    func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: @escaping MovieResult) {
         networkService.request(MoviesResponse.self, from: .fetchMovies(sortType: sortType, page: page)) { response in
             if let error = response.error {
                 completion(.failure(error))
@@ -37,7 +33,7 @@ final class DefaultFeedRepository: FeedRepository {
         }
     }
     
-    func fetchGenres(completion: @escaping GenreModelResult) {
+    func fetchGenres(completion: @escaping GenresResult) {
         networkService.request(GenresResponse.self, from: .fetchGenres) { response in
             if let error = response.error {
                 completion(.failure(error))

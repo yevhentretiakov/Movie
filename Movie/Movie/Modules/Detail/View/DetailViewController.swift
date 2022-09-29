@@ -11,6 +11,8 @@ import Kingfisher
 final class DetailViewController: UIViewController {
     // MARK: - Properties
     var presenter: DetailPresenter!
+    var loadingView: UIView?
+    
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var countryLabel: UILabel!
@@ -37,9 +39,6 @@ final class DetailViewController: UIViewController {
     
     private func setupTrailerButton() {
         trailerButton.makeRounded()
-        if !presenter.isHaveTrailer() {
-            trailerButton.isHidden = true
-        }
     }
 }
 
@@ -59,13 +58,5 @@ extension DetailViewController: DetailView {
         countryLabel.text = model.productionCountries.map({ $0.iso }).joined(separator: ", ")
         descriptionLabel.text = model.overview
         setupTrailerButton()
-    }
-    
-    func showLoadingIndicator() {
-        showLoadingView()
-    }
-    
-    func hideLoadingIndicator() {
-        hideLoadingView()
     }
 }
