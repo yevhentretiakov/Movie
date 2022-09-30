@@ -27,7 +27,7 @@ final class DefaultFeedRepository: FeedRepository {
         networkService.request(MoviesResponse.self, from: .fetchMovies(sortType: sortType, page: page)) { result in
             switch result {
             case .success(let data):
-                completion(.success(data?.results))
+                completion(.success(data.results))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -38,7 +38,7 @@ final class DefaultFeedRepository: FeedRepository {
         networkService.request(GenresResponse.self, from: .fetchGenres) { result in
             switch result {
             case .success(let data):
-                completion(.success(data?.genres))
+                completion(.success(data.genres))
             case .failure(let error):
                 completion(.failure(error))
             }

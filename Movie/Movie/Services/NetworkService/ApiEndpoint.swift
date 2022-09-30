@@ -13,6 +13,7 @@ enum ApiEndpoint {
     case fetchMovies(sortType: MoviesSortType, page: Int)
     case fetchGenres
     case fetchMovieDetails(id: Int)
+    case fetchMovieVideos(id: Int)
     static let apiKey = "37583bb7971b4bc83cd1317e9d98a299"
     static let baseURL = "https://api.themoviedb.org/3/"
     static let imagesBaseURL = "https://image.tmdb.org/t/p/w500/"
@@ -38,6 +39,8 @@ extension ApiEndpoint: HTTPRequest {
             return ApiEndpoint.baseURL
         case .fetchMovieDetails(_):
             return ApiEndpoint.baseURL
+        case .fetchMovieVideos(_):
+            return ApiEndpoint.baseURL
         }
     }
     var path: String {
@@ -48,6 +51,8 @@ extension ApiEndpoint: HTTPRequest {
             return "\(url)genre/movie/list"
         case .fetchMovieDetails(let id):
             return "\(url)movie/\(id)"
+        case .fetchMovieVideos(let id):
+            return "\(url)movie/\(id)/videos"
         }
     }
     var method: HTTPMethod {
@@ -58,6 +63,8 @@ extension ApiEndpoint: HTTPRequest {
             return .get
         case .fetchMovieDetails(_):
             return .get
+        case .fetchMovieVideos(_):
+            return .get
         }
     }
     var headers: HTTPHeaders? {
@@ -67,6 +74,8 @@ extension ApiEndpoint: HTTPRequest {
         case .fetchGenres:
             return nil
         case .fetchMovieDetails(_):
+            return nil
+        case .fetchMovieVideos(_):
             return nil
         }
     }
@@ -82,6 +91,9 @@ extension ApiEndpoint: HTTPRequest {
         case .fetchMovieDetails(_):
             return ["api_key": ApiEndpoint.apiKey,
                     "language": "en-US"]
+        case .fetchMovieVideos(_):
+            return ["api_key": ApiEndpoint.apiKey,
+                    "language": "en-US"]
         }
     }
     var encoding: URLEncoding {
@@ -91,6 +103,8 @@ extension ApiEndpoint: HTTPRequest {
         case .fetchGenres:
             return .default
         case .fetchMovieDetails(_):
+            return .default
+        case .fetchMovieVideos(_):
             return .default
         }
     }

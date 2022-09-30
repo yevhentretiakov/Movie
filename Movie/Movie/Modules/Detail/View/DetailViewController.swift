@@ -59,4 +59,8 @@ extension DetailViewController: DetailView {
         descriptionLabel.text = model.overview
         setupTrailerButton()
     }
+    
+    func hideTrailerButton() {
+        trailerButton.isHidden = true
+    }
 }

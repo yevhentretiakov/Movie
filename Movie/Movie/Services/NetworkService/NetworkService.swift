@@ -8,8 +8,6 @@
 import Foundation
 import Alamofire
 
-typealias NetworkResult<T> = (Result<T?, Error>) -> Void
-
 // MARK: - Protocols
 protocol NetworkService {
     func request<T: Decodable>(_ type: T.Type, from endpoint: ApiEndpoint, completion: @escaping NetworkResult<T>)

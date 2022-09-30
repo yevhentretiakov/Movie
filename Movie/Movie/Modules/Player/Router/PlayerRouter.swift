@@ -1,18 +1,18 @@
 //
-//  PosterRouter.swift
+//  PlayerRouter.swift
 //  Movie
 //
-//  Created by Yevhen Tretiakov on 22.09.2022.
+//  Created by Yevhen Tretiakov on 30.09.2022.
 //
 
 import Foundation
 
 // MARK: - Protocols
-protocol PosterRouter {
+protocol PlayerRouter {
     func close()
 }
 
-final class DefaultPosterRouter: DefaultBaseRouter, PosterRouter {
+final class DefaultPlayerRouter: DefaultBaseRouter, PlayerRouter {
     // MARK: - Internal Methods
     func close() {
         close(animated: true)

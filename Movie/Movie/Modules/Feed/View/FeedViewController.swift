@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Network
 
 final class FeedViewController: UIViewController {
     // MARK: - Properties
@@ -19,18 +20,24 @@ final class FeedViewController: UIViewController {
     
     private lazy var sortActionSheet: UIAlertController = {
         let alert = UIAlertController(title: "Sort Movies", message: "Please select an option", preferredStyle: .actionSheet)
-
+        
+        // Create default action
+        let defaultAction = UIAlertAction(title: "Popular", style: .default) { action in
+            self.selectSortType(.popular, with: action, alert: alert)
+        }
+        defaultAction.isEnabled = false
+        defaultAction.setValue(true, forKey: "checked")
+        
+        // Add actions
         alert.addAction(UIAlertAction(title: "Now Playing", style: .default) { action in
-            self.presenter.selectSortType(.playing)
+            self.selectSortType(.playing, with: action, alert: alert)
         })
-        alert.addAction(UIAlertAction(title: "Popular", style: .default) { action in
-            self.presenter.selectSortType(.popular)
-        })
+        alert.addAction(defaultAction)
         alert.addAction(UIAlertAction(title: "Top Rated", style: .default) { action in
-            self.presenter.selectSortType(.topRated)
+            self.selectSortType(.topRated, with: action, alert: alert)
         })
         alert.addAction(UIAlertAction(title: "Upcoming", style: .default) { action in
-            self.presenter.selectSortType(.upcoming)
+            self.selectSortType(.upcoming, with: action, alert: alert)
         })
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
@@ -91,6 +98,20 @@ final class FeedViewController: UIViewController {
         self.present(sortActionSheet, animated: true)
     }
     
+    private func selectSortType(_ type: MoviesSortType, with action: UIAlertAction, alert: UIAlertController) {
+        self.presenter.selectSortType(type)
+        self.setActive(action: action, in: alert)
+    }
+    
+    private func setActive(action: UIAlertAction, in alertController: UIAlertController) {
+        alertController.actions.forEach { action in
+            action.isEnabled = true
+            action.setValue(false, forKey: "checked")
+        }
+        action.isEnabled = false
+        action.setValue(true, forKey: "checked")
+    }
+    
     // MARK: - Layout Methods
     private func layoutMoviesTableView() {
         view.addSubview(moviesTableView)
@@ -125,16 +146,6 @@ extension FeedViewController: UITableViewDelegate {
         presenter.movieTapped(with: indexPath.row)
         moviesTableView.deselectRow(at: indexPath, animated: true)
     }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        let offsetY = moviesTableView.contentOffset.y
-        let contentHeight = moviesTableView.contentSize.height
-        let height = moviesTableView.frame.size.height
-        
-        if offsetY > contentHeight - height {
-            presenter.loadMore()
-        }
-    }
 }
 
 // MARK: - UITableViewDataSource
@@ -149,6 +160,12 @@ extension FeedViewController: UITableViewDataSource {
         cell.configure(with: item)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == presenter.getItemsCount() - 1 {
+            presenter.loadMore()
+        }
+    }
 }
 
 // MARK: - UISearchBarDelegate
@@ -156,6 +173,7 @@ extension FeedViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter.search(with: searchText)
     }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         presenter.cancelSearch()
     }

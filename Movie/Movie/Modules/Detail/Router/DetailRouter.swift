@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Protocols
 protocol DetailRouter {
     func showPoster(from path: String)
-    func showVideo(from url: String)
+    func showVideo(with id: String)
     func close()
 }
 
@@ -21,11 +21,9 @@ final class DefaultDetailRouter: DefaultBaseRouter, DetailRouter {
         show(viewController: viewController, isModal: true, animated: true)
     }
     
-    func showVideo(from url: String) {
-        let viewController = DefaultDetailBuilder().createPlayer(with: url)
-        show(viewController: viewController, isModal: true, animated: true) {
-            viewController.player?.play()
-        }
+    func showVideo(with id: String) {
+        let viewController = DefaultPlayerBuilder().createPlayerModule(with: id)
+        show(viewController: viewController, isModal: true, animated: true)
     }
     
     func close() {

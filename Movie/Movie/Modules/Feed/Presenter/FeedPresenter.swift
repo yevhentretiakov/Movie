@@ -67,7 +67,7 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     
     func movieTapped(with index: Int) {
-        router.showMovieDetails(with: movies[index].id)
+        router.showMovieDetails(with: filteredMovies[index].id)
     }
     
     func loadMore() {
@@ -112,43 +112,32 @@ final class DefaultFeedPresenter: FeedPresenter {
             self.loadingData = false
             switch result {
             case .success(let movies):
-                if let movies = movies {
-                    let fetchedMovies =  movies.map({ post in
-                        let genresNames = post.genreIds.compactMap { id in
-                            self.genres.first(where: { $0.id == id })?.name
-                        }
-                        return MovieUIModel(genres: genresNames,
-                                     id: post.id,
-                                     voteAverage: post.voteAverage,
-                                     title: post.title,
-                                            backdropPath: post.backdropPath ?? "",
-                                     releaseDate: post.releaseDate)
-                    })
-                    self.movies.append(contentsOf: fetchedMovies)
-                    self.filteredMovies = self.movies
-                    DispatchQueue.main.async {
-                        self.view?.reloadData()
+                let fetchedMovies =  movies.map({ post in
+                    let genresNames = post.genreIds.compactMap { id in
+                        self.genres.first(where: { $0.id == id })?.name
                     }
-                } else {
-                    DispatchQueue.main.async {
-                        self.view?.showMessage(title: "Error", message: NetworkError.tryLater.rawValue)
-                    }
-                }
-                
-            case .failure(let error):
-            
-//                if let err = error.underlyingError as? URLError, err.code  == URLError.Code.notConnectedToInternet
-//                {
-//                    DispatchQueue.main.async {
-//                        self.view?.showMessage(title: "Error", message: NetworkError.offline.rawValue)
-//                    }
-//                } else {
-//                    DispatchQueue.main.async {
-//                        self.view?.showMessage(title: "Error", message: error.localizedDescription)
-//                    }
-//                }
+                    return MovieUIModel(genres: genresNames,
+                                 id: post.id,
+                                 voteAverage: post.voteAverage,
+                                 title: post.title,
+                                        backdropPath: post.backdropPath ?? "",
+                                 releaseDate: post.releaseDate)
+                })
+                self.movies.append(contentsOf: fetchedMovies)
+                self.filteredMovies = self.movies
                 DispatchQueue.main.async {
-                    self.view?.showMessage(title: "Error", message: error.localizedDescription)
+                    self.view?.reloadData()
+                }
+            case .failure(let error):
+                DefaultNetworkMonitor.shared.isReachable { [weak self] status in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        if status {
+                            self.view?.showMessage(title: "Error", message: error.localizedDescription)
+                        } else {
+                            self.view?.showMessage(title: "Error", message: NetworkError.noInternetConnection.rawValue)
+                        }
+                    }
                 }
             }
             completion?()
@@ -160,17 +149,18 @@ final class DefaultFeedPresenter: FeedPresenter {
             guard let self = self else { return }
             switch result {
             case .success(let genres):
-                if let genres = genres {
-                    self.genres = genres
-                    self.fetchMovies(with: self.sortType, on: 1)
-                } else {
-                    DispatchQueue.main.async {
-                        self.view?.showMessage(title: "Error", message: NetworkError.tryLater.rawValue)
-                    }
-                }
+                self.genres = genres
+                self.fetchMovies(with: self.sortType, on: 1)
             case .failure(let error):
-                DispatchQueue.main.async {
-                    self.view?.showMessage(title: "Error", message: error.localizedDescription)
+                DefaultNetworkMonitor.shared.isReachable { [weak self] status in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        if status {
+                            self.view?.showMessage(title: "Error", message: error.localizedDescription)
+                        } else {
+                            self.view?.showMessage(title: "Error", message: NetworkError.noInternetConnection.rawValue)
+                        }
+                    }
                 }
             }
         }
