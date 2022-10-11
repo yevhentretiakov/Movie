@@ -15,10 +15,10 @@ protocol DetailRepository {
 
 final class DefaultDetailRepository: DetailRepository {
     // MARK: - Properties
-    private let networkService: NetworkService
+    private let networkService: NetworkManager
     
     // MARK: - Life Cycle Methods
-    init(networkService: NetworkService = DefaultNetworkService()) {
+    init(networkService: NetworkManager = DefaultNetworkManager()) {
         self.networkService = networkService
     }
     

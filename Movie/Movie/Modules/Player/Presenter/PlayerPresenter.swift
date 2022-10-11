@@ -8,12 +8,13 @@
 import Foundation
 
 // MARK: - Protocols
-protocol PlayerView: AnyObject {
+protocol PlayerView: AnyObject, Loadable {
     func loadVideo(with id: String)
 }
 
 protocol PlayerPresenter {
     func viewDidLoad()
+    func close()
 }
 
 final class DefaultPlayerPresenter: PlayerPresenter {
@@ -23,7 +24,9 @@ final class DefaultPlayerPresenter: PlayerPresenter {
     private var videoId: String
     
     // MARK: - Life Cycle Methods
-    init(view: PlayerView, router: PlayerRouter, videoId: String) {
+    init(view: PlayerView,
+         router: PlayerRouter,
+         videoId: String) {
         self.view = view
         self.router = router
         self.videoId = videoId
@@ -31,6 +34,11 @@ final class DefaultPlayerPresenter: PlayerPresenter {
     
     // MARK: - Internal Methods
     func viewDidLoad() {
+        view?.showLoadingView()
         view?.loadVideo(with: videoId)
+    }
+    
+    func close() {
+        router.close()
     }
 }

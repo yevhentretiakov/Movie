@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Kingfisher
 
 final class PosterViewController: UIViewController {
     // MARK: - Properties
@@ -26,12 +25,17 @@ final class PosterViewController: UIViewController {
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 6.0
     }
+    
+    // MARK: - Private Methods
+    @IBAction private func didTapCloseButton(_ sender: UIButton) {
+        presenter.close()
+    }
 }
 
 // MARK: - PosterView
 extension PosterViewController: PosterView {
     func configurePoster(with path: String) {
-        posterImageView.kf.setImage(with: URL(string: "\(ApiEndpoint.imagesBaseURL)\(path)"))
+        posterImageView.setImage(with: path, resolution: .high)
     }
 }
 

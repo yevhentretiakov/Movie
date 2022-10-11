@@ -17,7 +17,9 @@ final class DefaultPlayerBuilder: PlayerBuilder {
     func createPlayerModule(with videoId: String) -> UIViewController {
         let view = PlayerViewController()
         let router = DefaultPlayerRouter(viewController: view)
-        let presenter = DefaultPlayerPresenter(view: view, router: router, videoId: videoId)
+        let presenter = DefaultPlayerPresenter(view: view,
+                                               router: router,
+                                               videoId: videoId)
         view.presenter = presenter
         return view
     }

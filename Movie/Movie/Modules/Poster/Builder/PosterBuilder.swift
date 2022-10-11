@@ -17,7 +17,9 @@ final class DefaultPosterBuilder: PosterBuilder {
     func createPosterModule(with posterPath: String) -> UIViewController {
         let view = PosterViewController()
         let router = DefaultPosterRouter(viewController: view)
-        let presenter = DefaultPosterPresenter(view: view, router: router, posterPath: posterPath)
+        let presenter = DefaultPosterPresenter(view: view,
+                                               router: router,
+                                               posterPath: posterPath)
         view.presenter = presenter
         return view
     }

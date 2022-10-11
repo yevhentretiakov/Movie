@@ -7,6 +7,13 @@
 
 import Foundation
 
-enum NetworkError: String {
-    case noInternetConnection = "You are offline. Please, enable your Wi-Fi or connect using cellular data."
+enum NetworkError: Error {
+    case noInternetConnection
+    
+    var message: String {
+        switch self {
+        case .noInternetConnection:
+            return "You are offline. Please, enable your Wi-Fi or connect using cellular data."
+        }
+    }
 }

@@ -11,14 +11,15 @@ import UIKit
 protocol FeedRepository {
     func fetchMovies(with sortType: MoviesSortType, on page: Int, completion: @escaping MovieResult)
     func fetchGenres(completion: @escaping GenresResult)
+    func fetchSearch(query: String, page: Int, completion: @escaping MovieResult)
 }
 
 final class DefaultFeedRepository: FeedRepository {
     // MARK: - Properties
-    private let networkService: NetworkService
+    private let networkService: NetworkManager
     
     // MARK: - Life Cycle Methods
-    init(networkService: NetworkService = DefaultNetworkService()) {
+    init(networkService: NetworkManager = DefaultNetworkManager()) {
         self.networkService = networkService
     }
     
@@ -39,6 +40,18 @@ final class DefaultFeedRepository: FeedRepository {
             switch result {
             case .success(let data):
                 completion(.success(data.genres))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchSearch(query: String, page: Int, completion: @escaping MovieResult) {
+        networkService.cancel()
+        networkService.request(MoviesResponse.self, from: .fetchSearch(query: query, page: page)) { result in
+            switch result {
+            case .success(let data):
+                completion(.success(data.results))
             case .failure(let error):
                 completion(.failure(error))
             }

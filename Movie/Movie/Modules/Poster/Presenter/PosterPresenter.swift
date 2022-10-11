@@ -14,6 +14,7 @@ protocol PosterView: AnyObject {
 
 protocol PosterPresenter {
     func viewDidLoad()
+    func close()
 }
 
 final class DefaultPosterPresenter: PosterPresenter {
@@ -23,7 +24,9 @@ final class DefaultPosterPresenter: PosterPresenter {
     private var posterPath: String
     
     // MARK: - Life Cycle Methods
-    init(view: PosterView, router: PosterRouter, posterPath: String) {
+    init(view: PosterView,
+         router: PosterRouter,
+         posterPath: String) {
         self.view = view
         self.router = router
         self.posterPath = posterPath
@@ -32,5 +35,9 @@ final class DefaultPosterPresenter: PosterPresenter {
     // MARK: - Internal Methods
     func viewDidLoad() {
         view?.configurePoster(with: posterPath)
+    }
+    
+    func close() {
+        router.close()
     }
 }

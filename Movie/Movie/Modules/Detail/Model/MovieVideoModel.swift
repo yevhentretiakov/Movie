@@ -9,9 +9,20 @@ import Foundation
 
 struct MovieVideosResponse: Codable {
     let results: [MovieVideoModel]
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.results = try container.decodeIfPresent([MovieVideoModel].self, forKey: .results) ?? []
+    }
 }
 
 struct MovieVideoModel: Codable {
     let key: String
     let type: String
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.key = try container.decodeIfPresent(String.self, forKey: .key) ?? ""
+        self.type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+    }
 }

@@ -5,12 +5,12 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlayerViewController" customModule="Movie" customModuleProvider="target">
             <connections>
+                <outlet property="closeButton" destination="hsH-wM-QSL" id="H9U-bD-fu7"/>
                 <outlet property="playerView" destination="Y1K-2W-hfY" id="9Sp-cw-g45"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -21,26 +21,39 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y1K-2W-hfY" customClass="YTPlayerView">
-                    <rect key="frame" x="0.0" y="47" width="390" height="300"/>
+                    <rect key="frame" x="0.0" y="272" width="390" height="300"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="300" id="hJM-hK-nTJ"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hsH-wM-QSL">
+                    <rect key="frame" x="340" y="58.000000000000007" width="40" height="38.666666666666664"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="J6Y-IH-Siv"/>
+                        <constraint firstAttribute="width" constant="40" id="sr1-rp-4xl"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" backgroundImage="xmark.circle.fill" catalog="system"/>
+                    <connections>
+                        <action selector="didTapCloseButton:" destination="-1" eventType="touchUpInside" id="3mC-qJ-DvN"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="Y1K-2W-hfY" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Lux-F7-gCZ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="hsH-wM-QSL" secondAttribute="trailing" constant="10" id="bkM-iL-cSp"/>
+                <constraint firstItem="Y1K-2W-hfY" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="gnR-oi-UAi"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Y1K-2W-hfY" secondAttribute="trailing" id="oJy-Uo-RBB"/>
-                <constraint firstItem="Y1K-2W-hfY" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="qmD-p7-TWq"/>
+                <constraint firstItem="hsH-wM-QSL" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="10" id="z2d-oz-gaU"/>
             </constraints>
             <point key="canvasLocation" x="136.92307692307691" y="20.616113744075829"/>
         </view>
     </objects>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <image name="xmark.circle.fill" catalog="system" width="128" height="123"/>
     </resources>
 </document>

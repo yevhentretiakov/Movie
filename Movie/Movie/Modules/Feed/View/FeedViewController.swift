@@ -6,20 +6,23 @@
 //
 
 import UIKit
-import Network
 
 final class FeedViewController: UIViewController {
     // MARK: - Properties
     var presenter: FeedPresenter!
-    var loadingView: UIView?
+    private var loadingView: UIView?
     
     private lazy var moviesTableView: UITableView = {
         let tableView = UITableView()
+        tableView.rowHeight = 250
+        tableView.separatorStyle = .none
         return tableView
     }()
     
     private lazy var sortActionSheet: UIAlertController = {
-        let alert = UIAlertController(title: "Sort Movies", message: "Please select an option", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Sort Movies",
+                                      message: "Please select an option",
+                                      preferredStyle: .actionSheet)
         
         // Create default action
         let defaultAction = UIAlertAction(title: "Popular", style: .default) { action in
@@ -84,7 +87,6 @@ final class FeedViewController: UIViewController {
         moviesTableView.delegate = self
         moviesTableView.dataSource = self
         MovieTableViewCell.registerNib(in: moviesTableView)
-        moviesTableView.rowHeight = 250
     }
     
     private func setupSortButton() {
@@ -98,12 +100,15 @@ final class FeedViewController: UIViewController {
         self.present(sortActionSheet, animated: true)
     }
     
-    private func selectSortType(_ type: MoviesSortType, with action: UIAlertAction, alert: UIAlertController) {
+    private func selectSortType(_ type: MoviesSortType,
+                                with action: UIAlertAction,
+                                alert: UIAlertController) {
         self.presenter.selectSortType(type)
         self.setActive(action: action, in: alert)
     }
     
-    private func setActive(action: UIAlertAction, in alertController: UIAlertController) {
+    private func setActive(action: UIAlertAction,
+                           in alertController: UIAlertController) {
         alertController.actions.forEach { action in
             action.isEnabled = true
             action.setValue(false, forKey: "checked")
@@ -136,14 +141,14 @@ extension FeedViewController: FeedView {
     }
     
     func scrollToTop() {
-        self.moviesTableView.setContentOffset(.zero, animated: false)
+        moviesTableView.setContentOffset(.zero, animated: false)
     }
 }
 
 // MARK: - UITableViewDelegate
 extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter.movieTapped(with: indexPath.row)
+        presenter.showMovieDetails(with: indexPath.row)
         moviesTableView.deselectRow(at: indexPath, animated: true)
     }
 }

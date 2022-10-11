@@ -15,7 +15,7 @@ protocol FeedRouter {
 final class DefaultFeedRouter: DefaultBaseRouter, FeedRouter {
     // MARK: - Internal Methods
     func showMovieDetails(with id: Int) {
-        let viewController = DefaultDetailBuilder().createDetailModule(withMovieId: id)
+        let viewController = DefaultDetailBuilder().createDetailModule(with: id)
         show(viewController: viewController, isModal: false, animated: true)
     }
 }

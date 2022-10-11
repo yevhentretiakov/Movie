@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Kingfisher
 
 final class MovieTableViewCell: BaseTableViewCell {
     // MARK: - Properties
@@ -19,11 +18,14 @@ final class MovieTableViewCell: BaseTableViewCell {
     
     // MARK: - Internal Methods
     func configure(with model: MovieUIModel) {
+        posterImageView.image = nil
         titleLabel.text = model.title
         yearLabel.text = model.releaseDate
-        ratingLabel.text = model.voteAverage.toString
+        ratingLabel.text = model.voteAverage.toString(rounded: 1)
         genresLabel.text = model.genres.joined(separator: ", ")
-        posterImageView.kf.setImage(with: URL(string: "\(ApiEndpoint.imagesBaseURL)\(model.backdropPath)"))
+        posterImageView.setImage(with: model.backdropPath)
+        posterImageView.cornerRadius = 10
+        underlayView.cornerRadius = 10
         underlayView.setShadow(color: .black, offset: .zero, opacity: 1, radius: 3)
     }
 }

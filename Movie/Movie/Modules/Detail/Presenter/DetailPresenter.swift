@@ -8,16 +8,16 @@
 import Foundation
 
 // MARK: - Protocols
-protocol DetailView: AnyObject, LoadingView {
+protocol DetailView: AnyObject, Loadable {
     func showMessage(title: String, message: String)
-    func configureMovie(with model: MovieDetailModel)
-    func hideTrailerButton()
+    func displayMovie(with model: MovieDetailModel)
+    func updateTrailerConditions(_ trailerExists: Bool)
 }
 
 protocol DetailPresenter {
     func viewDidLoad()
-    func didTapPosterImageView()
-    func didTapTrailerButton()
+    func showPoster()
+    func showTrailer()
 }
 
 final class DefaultDetailPresenter: DetailPresenter {
@@ -25,77 +25,96 @@ final class DefaultDetailPresenter: DetailPresenter {
     private weak var view: DetailView?
     private let router: DetailRouter
     private let repository: DetailRepository
-    private let moviewId: Int
-    private var posterPath: String?
+    private let movieId: Int
     private var videoId: String?
+    private var movie: MovieDetailModel?
     
     // MARK: - Life Cycle Methods
-    init(view: DetailView, moviewId: Int, router: DetailRouter, repository: DetailRepository) {
+    init(view: DetailView,
+         movieId: Int,
+         router: DetailRouter,
+         repository: DetailRepository) {
         self.view = view
-        self.moviewId = moviewId
+        self.movieId = movieId
         self.router = router
         self.repository = repository
     }
     
     // MARK: - Internal Methods
     func viewDidLoad() {
-        fetchMovieDetails(with: moviewId)
-        fetchMovieTrailer(with: moviewId)
+        showMovieDetails()
     }
     
-    func didTapPosterImageView() {
-        if let posterPath = posterPath {
-            router.showPoster(from: posterPath)
+    func showPoster() {
+        if let imagePath = movie?.backdropPath {
+            router.showPoster(from: imagePath)
         }
     }
     
-    func didTapTrailerButton() {
+    func showTrailer() {
         if let videoId = videoId {
             router.showVideo(with: videoId)
         }
     }
     
     // MARK: - Private Methods
-    private func fetchMovieDetails(with id: Int) {
+    private func showMovieDetails() {
+        let dispatchGroup = DispatchGroup()
         view?.showLoadingView()
-        repository.fetchMovieDetails(with: id) { [weak self] result in
-            guard let self = self else { return }
-            self.view?.hideLoadingView()
-            switch result {
-            case .success(let movie):
-                self.posterPath = movie.posterPath
-                DispatchQueue.main.async {
-                    self.view?.configureMovie(with: movie)
+        
+        dispatchGroup.enter()
+        fetchMovieDetails(with: movieId) {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        fetchMovieTrailer(with: movieId) {
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: DispatchQueue.global(qos: .userInteractive)) {
+            DispatchQueue.main.async {
+                if let movie = self.movie {
+                    self.view?.displayMovie(with: movie)
                 }
-            case .failure(let error):
-                DefaultNetworkMonitor.shared.isReachable { [weak self] status in
-                    guard let self = self else { return }
-                    DispatchQueue.main.async {
-                        if status {
-                            self.view?.showMessage(title: "Error", message: error.localizedDescription)
-                        } else {
-                            self.view?.showMessage(title: "Error", message: NetworkError.noInternetConnection.rawValue)
-                            self.router.close()
-                        }
-                    }
-                }
+                self.view?.updateTrailerConditions(self.videoId != nil)
+                self.view?.hideLoadingView()
             }
         }
     }
     
-    private func fetchMovieTrailer(with id: Int) {
+    private func fetchMovieDetails(with id: Int, completion: EmptyBlock? = nil) {
+        repository.fetchMovieDetails(with: id) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let movie):
+                self.movie = movie
+            case .failure(let error):
+                if let error = error as? NetworkError {
+                    self.view?.showMessage(title: "Error",
+                                           message: error.message)
+                } else {
+                    self.view?.showMessage(title: "Error",
+                                           message: error.localizedDescription)
+                }
+                self.router.close()
+            }
+            completion?()
+        }
+    }
+    
+    private func fetchMovieTrailer(with id: Int, completion: EmptyBlock? = nil) {
         repository.fetchMovieTrailer(with: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let trailer):
                 if trailer != nil {
                     self.videoId = trailer?.key
-                } else {
-                    self.view?.hideTrailerButton()
                 }
-            case .failure(_):
-                self.view?.hideTrailerButton()
+            case .failure:
+                self.videoId = nil
             }
+            completion?()
         }
     }
 }

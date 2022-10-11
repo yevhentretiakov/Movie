@@ -9,32 +9,43 @@ import Foundation
 import Alamofire
 
 // MARK: - Protocols
-protocol NetworkService {
+protocol NetworkManager {
     func request<T: Decodable>(_ type: T.Type, from endpoint: ApiEndpoint, completion: @escaping NetworkResult<T>)
+    func cancel()
 }
 
-final class DefaultNetworkService: NetworkService {
+final class DefaultNetworkManager: NetworkManager {
     // MARK: - Properties
-    private static let decoder: JSONDecoder = {
+    static let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
     
+    private var request: DataRequest?
+    
     // MARK: - Methods
     func request<T: Decodable>(_ type: T.Type, from endpoint: ApiEndpoint, completion: @escaping NetworkResult<T>) {
-        AF.request(endpoint.path,
+        request = AF.request(endpoint.url,
                    method: endpoint.method,
                    parameters: endpoint.parameters,
                    encoding: endpoint.encoding,
                    headers: endpoint.headers)
-        .responseDecodable(of: type, decoder: DefaultNetworkService.decoder) { response in
+        .responseDecodable(of: type, decoder: DefaultNetworkManager.decoder) { response in
             switch response.result {
-            case .failure(let error):
-                completion(.failure(error))
             case .success(let data):
                 completion(.success(data))
+            case .failure(let error):
+                if let urlError = error.underlyingError as? URLError, urlError.code == URLError.Code.notConnectedToInternet{
+                    completion(.failure(NetworkError.noInternetConnection))
+                } else {
+                    completion(.failure(error))
+                }
             }
         }
+    }
+    
+    func cancel() {
+        request?.cancel()
     }
 }

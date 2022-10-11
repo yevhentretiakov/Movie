@@ -6,12 +6,11 @@
 //
 
 import UIKit
-import Kingfisher
 
 final class DetailViewController: UIViewController {
     // MARK: - Properties
     var presenter: DetailPresenter!
-    var loadingView: UIView?
+    private var loadingView: UIView?
     
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
@@ -30,15 +29,11 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Private Methods
     @IBAction private func didTapPosterImageView(_ sender: UITapGestureRecognizer) {
-        presenter.didTapPosterImageView()
+        presenter.showPoster()
     }
     
     @IBAction private func didTapTrailerButton(_ sender: UIButton) {
-        presenter.didTapTrailerButton()
-    }
-    
-    private func setupTrailerButton() {
-        trailerButton.makeRounded()
+        presenter.showTrailer()
     }
 }
 
@@ -48,19 +43,20 @@ extension DetailViewController: DetailView {
         showAlert(title: title, message: message)
     }
     
-    func configureMovie(with model: MovieDetailModel) {
+    func displayMovie(with model: MovieDetailModel) {
         title = model.title
-        posterImageView.kf.setImage(with: URL(string: "\(ApiEndpoint.imagesBaseURL)\(model.backdropPath ?? "")"))
+        posterImageView.setImage(with: model.backdropPath)
         titleLabel.text = model.title
-        yearLabel.text = model.releaseDate
+        yearLabel.text = model.releaseDate.dateFromString(with: "yyyy-MM-dd")?.dateString(in: "dd MMM yyyy") ?? ""
         genreLabel.text = model.genres.map({ $0.name }).joined(separator: ", ")
-        ratingLabel.text = model.voteAverage.rounded(toPlaces: 1).toString
-        countryLabel.text = model.productionCountries.map({ $0.iso }).joined(separator: ", ")
+        ratingLabel.text = model.voteAverage.toString(rounded: 1)
+        countryLabel.text = model.productionCountries.map({ $0.name }).joined(separator: ", ")
         descriptionLabel.text = model.overview
-        setupTrailerButton()
     }
     
-    func hideTrailerButton() {
-        trailerButton.isHidden = true
+    func updateTrailerConditions(_ trailerExists: Bool) {
+        if trailerExists {
+            trailerButton.isHidden = false
+        }
     }
 }
