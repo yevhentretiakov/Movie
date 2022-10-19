@@ -19,13 +19,13 @@ struct MovieDetailModel: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
-        self.overview = try container.decodeIfPresent(String.self, forKey: .overview) ?? ""
-        self.releaseDate = try container.decodeIfPresent(String.self, forKey: .releaseDate) ?? ""
-        self.backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath) ?? ""
-        self.genres = try container.decodeIfPresent([GenreModel].self, forKey: .genres) ?? []
-        self.voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage) ?? 0
-        self.productionCountries = try container.decodeIfPresent([CountryModel].self, forKey: .productionCountries) ?? []
+        self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? .empty
+        self.overview = try container.decodeIfPresent(String.self, forKey: .overview) ?? .empty
+        self.releaseDate = try container.decodeIfPresent(String.self, forKey: .releaseDate) ?? .empty
+        self.backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath) ?? .empty
+        self.genres = try container.decodeIfPresent([GenreModel].self, forKey: .genres) ?? .emptyList
+        self.voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage) ?? .zero
+        self.productionCountries = try container.decodeIfPresent([CountryModel].self, forKey: .productionCountries) ?? .emptyList
     }
 }
 
@@ -34,6 +34,6 @@ struct CountryModel: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? .empty
     }
 }

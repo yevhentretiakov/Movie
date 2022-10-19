@@ -15,8 +15,6 @@ enum ApiEndpoint {
     case fetchMovieDetails(id: Int)
     case fetchMovieVideos(id: Int)
     case fetchSearch(query: String, page: Int)
-    static let defaultParameters = ["api_key": .apiKey,
-                                    "language": "en-US"]
 }
 
 // MARK: - Protocols
@@ -71,18 +69,17 @@ extension ApiEndpoint: HTTPRequest {
         }
     }
     var parameters: Parameters? {
+        var parameters: [String: Any] = .defaultParameters
         switch self {
         case .fetchMovies(_, let page):
-            var parameters = ApiEndpoint.defaultParameters
             parameters["page"] = page.stringValue
             return parameters
         case .fetchSearch(let query, let page):
-            var parameters = ApiEndpoint.defaultParameters
             parameters["query"] = query
             parameters["page"] = page.stringValue
             return parameters
         case .fetchGenres, .fetchMovieDetails(_), .fetchMovieVideos(_):
-            return ApiEndpoint.defaultParameters
+            return .defaultParameters
         }
     }
     var encoding: ParameterEncoding {
@@ -93,7 +90,13 @@ extension ApiEndpoint: HTTPRequest {
     }
 }
 
-fileprivate extension String {
+// MARK: - Constants
+private extension String {
     static let apiKey = "37583bb7971b4bc83cd1317e9d98a299"
     static let baseURL = "https://api.themoviedb.org/3/"
+}
+
+private extension Dictionary<String, Any> {
+    static let defaultParameters = ["api_key": .apiKey,
+                                    "language": "en-US"]
 }

@@ -15,6 +15,7 @@ final class MovieTableViewCell: BaseTableViewCell {
     @IBOutlet private weak var ratingLabel: UILabel!
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var underlayView: UIView!
+    private let posterCornerRadius: CGFloat = 10
     
     // MARK: - Internal Methods
     func configure(with model: MovieUIModel) {
@@ -24,8 +25,8 @@ final class MovieTableViewCell: BaseTableViewCell {
         ratingLabel.text = model.voteAverage.toString(rounded: 1)
         genresLabel.text = model.genres.joined(separator: ", ")
         posterImageView.setImage(with: model.backdropPath)
-        posterImageView.cornerRadius = 10
-        underlayView.cornerRadius = 10
+        posterImageView.cornerRadius = posterCornerRadius
+        underlayView.cornerRadius = posterCornerRadius
         underlayView.setShadow(color: .black, offset: .zero, opacity: 1, radius: 3)
     }
 }

@@ -44,6 +44,7 @@
 		CE9D391F28E70D6B007A2C60 /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D391E28E70D6B007A2C60 /* YouTubeiOSPlayerHelper */; };
 		CE9D392228E70E7B007A2C60 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D392128E70E7B007A2C60 /* Kingfisher */; };
 		CE9D392528E70E91007A2C60 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D392428E70E91007A2C60 /* Alamofire */; };
+		CEB0306529001DFF00FEA520 /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB0306429001DFF00FEA520 /* Collection+Extensions.swift */; };
 		CED8E3D228DB2BCA0049BECD /* GenreModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED8E3D128DB2BCA0049BECD /* GenreModel.swift */; };
 		CED8E3DC28DB39710049BECD /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED8E3DB28DB39710049BECD /* DetailViewController.swift */; };
 		CED8E3DE28DB39A60049BECD /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED8E3DD28DB39A60049BECD /* DetailPresenter.swift */; };
@@ -96,6 +97,7 @@
 		CE9D391228E6F9B8007A2C60 /* PlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerViewController.xib; sourceTree = "<group>"; };
 		CE9D391528E6F9FF007A2C60 /* PlayerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPresenter.swift; sourceTree = "<group>"; };
 		CE9D391728E6FA2E007A2C60 /* PlayerRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerRouter.swift; sourceTree = "<group>"; };
+		CEB0306429001DFF00FEA520 /* Collection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
 		CED8E3D128DB2BCA0049BECD /* GenreModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreModel.swift; sourceTree = "<group>"; };
 		CED8E3DB28DB39710049BECD /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		CED8E3DD28DB39A60049BECD /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				CE0A8ED128EF06220057F557 /* String+Extensions.swift */,
 				CE0C9C1428EF38D2008A4D01 /* Int+Extensions.swift */,
 				CE849A7B28F06257001709DA /* UIImageView+Extensions.swift */,
+				CEB0306429001DFF00FEA520 /* Collection+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -583,6 +586,7 @@
 				CE83AB2628D9AE9900546811 /* FeedRepository.swift in Sources */,
 				CE83AB3028D9D06300546811 /* MovieTableViewCell.swift in Sources */,
 				CE83AB2128D9AC7C00546811 /* FeedPresenter.swift in Sources */,
+				CEB0306529001DFF00FEA520 /* Collection+Extensions.swift in Sources */,
 				CE0C328A28D8966F004466B6 /* UIViewController+Extensions.swift in Sources */,
 				CED8E3E228DB3AF10049BECD /* DetailBuilder.swift in Sources */,
 				CE0C328628D89629004466B6 /* Constants.swift in Sources */,

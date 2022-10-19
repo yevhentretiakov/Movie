@@ -13,7 +13,7 @@ struct MoviesResponse: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.results = try container.decodeIfPresent([MovieNetworkModel].self, forKey: .results) ?? []
+        self.results = try container.decodeIfPresent([MovieNetworkModel].self, forKey: .results) ?? .emptyList
     }
 }
 
@@ -27,12 +27,12 @@ struct MovieNetworkModel: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.genreIds = try container.decodeIfPresent([Int].self, forKey: .genreIds) ?? []
-        self.id = try container.decodeIfPresent(Int.self, forKey: .id) ?? 0
-        self.voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage) ?? 0
-        self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
-        self.backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath) ?? ""
-        self.releaseDate = try container.decodeIfPresent(String.self, forKey: .releaseDate) ?? ""
+        self.genreIds = try container.decodeIfPresent([Int].self, forKey: .genreIds) ?? .emptyList
+        self.id = try container.decodeIfPresent(Int.self, forKey: .id) ?? .zero
+        self.voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage) ?? .zero
+        self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? .empty
+        self.backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath) ?? .empty
+        self.releaseDate = try container.decodeIfPresent(String.self, forKey: .releaseDate) ?? .empty
     }
 }
 

@@ -12,7 +12,7 @@ struct MovieVideosResponse: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.results = try container.decodeIfPresent([MovieVideoModel].self, forKey: .results) ?? []
+        self.results = try container.decodeIfPresent([MovieVideoModel].self, forKey: .results) ?? .emptyList
     }
 }
 
@@ -22,7 +22,7 @@ struct MovieVideoModel: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.key = try container.decodeIfPresent(String.self, forKey: .key) ?? ""
-        self.type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+        self.key = try container.decodeIfPresent(String.self, forKey: .key) ?? .empty
+        self.type = try container.decodeIfPresent(String.self, forKey: .type) ?? .empty
     }
 }

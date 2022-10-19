@@ -51,20 +51,22 @@ final class DefaultFeedPresenter: FeedPresenter {
     private weak var view: FeedView?
     private let router: FeedRouter
     private let repository: FeedRepository
-    private var moviesStorage = [MovieUIModel]()
+    private var moviesStorage = [MoviesSortType: [MovieUIModel]]()
+    private var pageCounter = [MoviesSortType: Int]()
+    private var searchPage = 1
     private var movies = [MovieUIModel]()
     private var genres = [GenreModel]()
-    private var page = 1
     private var loadingData = false
     private var searchText = "" {
         willSet {
             if newValue != searchText {
-                page = 1
+                movies.removeAll()
+                searchPage = 1
             }
         }
     }
     private var sortType: MoviesSortType = .popular
-    private var timer: Timer?
+    private var searchWorkItem: DispatchWorkItem? = nil
     
     // MARK: - Life Cycle Methods
     init(view: FeedView,
@@ -94,57 +96,70 @@ final class DefaultFeedPresenter: FeedPresenter {
     
     func loadMore() {
         if !loadingData && searchText.isEmpty {
-            page += 1
-            fetchMovies(with: sortType, on: page)
+            pageCounter[sortType, default: 1] += 1
+            fetchMovies(with: sortType, on: getPage())
         } else if !loadingData && !searchText.isEmpty {
-            page += 1
-            fetchSearch(query: searchText, page: page)
+            searchPage += 1
+            fetchSearch(query: searchText, page: getPage())
         }
     }
     
     func selectSortType(_ type: MoviesSortType) {
-        moviesStorage.removeAll()
-        page = 1
         sortType = type
-        fetchMovies(with: sortType, on: page) {
+        DispatchQueue.main.async {
             self.view?.scrollToTop()
+        }
+        if moviesStorage[type] == nil {
+            fetchMovies(with: sortType, on: getPage())
+        } else {
+            showLoadedMovies()
         }
     }
     
     func search(with string: String) {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: 0.5,
-                                     target: self,
-                                     selector: #selector(startSearch),
-                                     userInfo: nil,
-                                     repeats: false)
+        searchWorkItem?.cancel()
         searchText = string
-    }
-    
-    @objc private func startSearch() {
         if searchText.isEmpty {
-            fetchMovies(with: sortType, on: page)
+            cancelSearch()
         } else {
-            fetchSearch(query: searchText, page: page)
+            searchWorkItem = DispatchWorkItem {
+                self.startSearch()
+            }
+            if let searchWorkItem = searchWorkItem {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: searchWorkItem)
+            }
         }
     }
     
     func cancelSearch() {
-        page = 1
         searchText = ""
-        fetchMovies(with: sortType, on: page) {
-            self.view?.scrollToTop()
-        }
+        showLoadedMovies()
     }
     
     // MARK: - Private Methods
+    private func showLoadedMovies() {
+        movies = moviesStorage[sortType, default: []]
+        DispatchQueue.main.async {
+            self.view?.scrollToTop()
+            self.view?.reloadData()
+        }
+    }
+    
+    private func startSearch() {
+        if searchText.isEmpty {
+            showLoadedMovies()
+        } else {
+            fetchSearch(query: searchText, page: getPage())
+        }
+    }
+    
     private func fetchGenres() {
         repository.fetchGenres { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let genres):
                 self.genres = genres
-                self.fetchMovies(with: self.sortType, on: self.page)
+                self.fetchMovies(with: self.sortType, on: self.getPage())
             case .failure(let error):
                 self.showError(error)
             }
@@ -175,7 +190,7 @@ final class DefaultFeedPresenter: FeedPresenter {
             self.finishDataLoading()
             switch result {
             case .success(let movies):
-                self.updateMovies(with: movies)
+                self.searchMovies(with: movies)
             case .failure(let error):
                 if let networkError = error as? NetworkError,
                     networkError == .noInternetConnection {
@@ -187,27 +202,35 @@ final class DefaultFeedPresenter: FeedPresenter {
         }
     }
     
-    private func updateMovies(with data: [MovieNetworkModel]) {
-        if page == 1 {
-            moviesStorage.removeAll()
-        }
-        moviesStorage.append(contentsOf: transformToModel(data))
-        movies = moviesStorage
+    private func searchMovies(with data: [MovieNetworkModel]) {
+        movies += transformToModel(data)
         DispatchQueue.main.async {
             self.view?.reloadData()
         }
     }
     
-    private func searchInLoadedMovies() {
-        let localFilteredMovies = self.moviesStorage.filter({
-            $0.title.lowercased().contains(self.searchText.lowercased())
-        })
-        if movies != localFilteredMovies {
-            movies = localFilteredMovies
+    private func updateMovies(with data: [MovieNetworkModel]) {
+        moviesStorage[sortType, default: []] += transformToModel(data)
+        if let array = moviesStorage[sortType] {
+            movies = array
             DispatchQueue.main.async {
                 self.view?.reloadData()
             }
-            showError(NetworkError.noInternetConnection)
+        }
+    }
+    
+    private func searchInLoadedMovies() {
+        if let array = moviesStorage[sortType] {
+            let localFilteredMovies = array.filter({
+                $0.title.lowercased().contains(self.searchText.lowercased())
+            })
+            if movies != localFilteredMovies {
+                movies = localFilteredMovies
+                DispatchQueue.main.async {
+                    self.view?.reloadData()
+                }
+                showError(NetworkError.noInternetConnection)
+            }
         }
     }
     
@@ -243,5 +266,9 @@ final class DefaultFeedPresenter: FeedPresenter {
             self.view?.showMessage(title: "Error",
                                    message: error.localizedDescription)
         }
+    }
+    
+    private func getPage() -> Int {
+        return pageCounter[sortType, default: 1]
     }
 }

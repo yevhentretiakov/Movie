@@ -12,7 +12,7 @@ struct GenresResponse: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.genres = try container.decodeIfPresent([GenreModel].self, forKey: .genres) ?? []
+        self.genres = try container.decodeIfPresent([GenreModel].self, forKey: .genres) ?? .emptyList
     }
 }
 
@@ -22,7 +22,7 @@ struct GenreModel: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decodeIfPresent(Int.self, forKey: .id) ?? 0
-        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        self.id = try container.decodeIfPresent(Int.self, forKey: .id) ?? .zero
+        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? .empty
     }
 }
