@@ -20,6 +20,9 @@
 		CE0C328C28D896A2004466B6 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C328B28D896A2004466B6 /* NetworkManager.swift */; };
 		CE0C328E28D896BC004466B6 /* ApiEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C328D28D896BC004466B6 /* ApiEndpoint.swift */; };
 		CE0C9C1528EF38D2008A4D01 /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C9C1428EF38D2008A4D01 /* Int+Extensions.swift */; };
+		CE4085272901325E006A2FDE /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4085262901325E006A2FDE /* CoreDataManager.swift */; };
+		CE4085292901328A006A2FDE /* DataAddable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4085282901328A006A2FDE /* DataAddable.swift */; };
+		CE40853329013436006A2FDE /* MovieData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE40853129013436006A2FDE /* MovieData.xcdatamodeld */; };
 		CE5C839A28DAE59B00F69B36 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C839928DAE59B00F69B36 /* Double+Extensions.swift */; };
 		CE83AB1D28D9AA3E00546811 /* FeedBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE83AB1C28D9AA3E00546811 /* FeedBuilder.swift */; };
 		CE83AB1F28D9AA8700546811 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE83AB1E28D9AA8700546811 /* FeedViewController.swift */; };
@@ -76,6 +79,9 @@
 		CE0C328B28D896A2004466B6 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		CE0C328D28D896BC004466B6 /* ApiEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiEndpoint.swift; sourceTree = "<group>"; };
 		CE0C9C1428EF38D2008A4D01 /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
+		CE4085262901325E006A2FDE /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		CE4085282901328A006A2FDE /* DataAddable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAddable.swift; sourceTree = "<group>"; };
+		CE40853229013436006A2FDE /* MovieData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MovieData.xcdatamodel; sourceTree = "<group>"; };
 		CE5C839928DAE59B00F69B36 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		CE83AB1C28D9AA3E00546811 /* FeedBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedBuilder.swift; sourceTree = "<group>"; };
 		CE83AB1E28D9AA8700546811 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
@@ -146,13 +152,14 @@
 		CE0C326028D8935D004466B6 /* Movie */ = {
 			isa = PBXGroup;
 			children = (
+				CE40852D29013364006A2FDE /* CoreData */,
 				CE0C327528D893E1004466B6 /* Application */,
 				CE83AB2428D9AE8500546811 /* DataRepository */,
 				CE0C327728D8948C004466B6 /* Modules */,
 				CE0C327F28D8954A004466B6 /* Managers */,
 				CE0C327E28D89528004466B6 /* Extensions */,
 				CE0C328428D895E3004466B6 /* Utilities */,
-				CE0C327628D89482004466B6 /* Support Files */,
+				CE0C327628D89482004466B6 /* Support */,
 				CE0C326F28D8935F004466B6 /* Info.plist */,
 			);
 			path = Movie;
@@ -167,13 +174,13 @@
 			path = Application;
 			sourceTree = "<group>";
 		};
-		CE0C327628D89482004466B6 /* Support Files */ = {
+		CE0C327628D89482004466B6 /* Support */ = {
 			isa = PBXGroup;
 			children = (
 				CE0C326A28D8935F004466B6 /* Assets.xcassets */,
 				CE0C326C28D8935F004466B6 /* LaunchScreen.storyboard */,
 			);
-			path = "Support Files";
+			path = Support;
 			sourceTree = "<group>";
 		};
 		CE0C327728D8948C004466B6 /* Modules */ = {
@@ -252,6 +259,7 @@
 		CE0C327F28D8954A004466B6 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				CE40852529013239006A2FDE /* CoreDataManager */,
 				CED853B228F6BC3900BA682A /* ImageManager */,
 				CE0C328028D8955C004466B6 /* NetworkManager */,
 			);
@@ -277,6 +285,23 @@
 				CE9983A828E5C16F00F7D50F /* Loadable.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		CE40852529013239006A2FDE /* CoreDataManager */ = {
+			isa = PBXGroup;
+			children = (
+				CE4085262901325E006A2FDE /* CoreDataManager.swift */,
+				CE4085282901328A006A2FDE /* DataAddable.swift */,
+			);
+			path = CoreDataManager;
+			sourceTree = "<group>";
+		};
+		CE40852D29013364006A2FDE /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				CE40853129013436006A2FDE /* MovieData.xcdatamodeld */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		CE83AB1B28D9AA2F00546811 /* Builder */ = {
@@ -585,7 +610,9 @@
 				CE0C9C1528EF38D2008A4D01 /* Int+Extensions.swift in Sources */,
 				CE83AB2628D9AE9900546811 /* FeedRepository.swift in Sources */,
 				CE83AB3028D9D06300546811 /* MovieTableViewCell.swift in Sources */,
+				CE4085272901325E006A2FDE /* CoreDataManager.swift in Sources */,
 				CE83AB2128D9AC7C00546811 /* FeedPresenter.swift in Sources */,
+				CE40853329013436006A2FDE /* MovieData.xcdatamodeld in Sources */,
 				CEB0306529001DFF00FEA520 /* Collection+Extensions.swift in Sources */,
 				CE0C328A28D8966F004466B6 /* UIViewController+Extensions.swift in Sources */,
 				CED8E3E228DB3AF10049BECD /* DetailBuilder.swift in Sources */,
@@ -601,6 +628,7 @@
 				CED9DDF628DC658E00C4E5D5 /* PosterPresenter.swift in Sources */,
 				CED9DDF028DC648B00C4E5D5 /* PosterBuilder.swift in Sources */,
 				CE83AB1F28D9AA8700546811 /* FeedViewController.swift in Sources */,
+				CE4085292901328A006A2FDE /* DataAddable.swift in Sources */,
 				CE83AB2C28D9CFD000546811 /* BaseTableViewCell.swift in Sources */,
 				CE9D391028E6F90D007A2C60 /* PlayerBuilder.swift in Sources */,
 				CE9983A928E5C16F00F7D50F /* Loadable.swift in Sources */,
@@ -857,6 +885,19 @@
 			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		CE40853129013436006A2FDE /* MovieData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CE40853229013436006A2FDE /* MovieData.xcdatamodel */,
+			);
+			currentVersion = CE40853229013436006A2FDE /* MovieData.xcdatamodel */;
+			path = MovieData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = CE0C325628D8935D004466B6 /* Project object */;
 }

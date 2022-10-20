@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 // MARK: - Enums
 enum MoviesSortType {
@@ -67,6 +68,7 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     private var sortType: MoviesSortType = .popular
     private var searchWorkItem: DispatchWorkItem? = nil
+    private var fetchedFromDataBase = false
     
     // MARK: - Life Cycle Methods
     init(view: FeedView,
@@ -95,12 +97,14 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     
     func loadMore() {
-        if !loadingData && searchText.isEmpty {
-            pageCounter[sortType, default: 1] += 1
-            fetchMovies(with: sortType, on: getPage())
-        } else if !loadingData && !searchText.isEmpty {
-            searchPage += 1
-            fetchSearch(query: searchText, page: getPage())
+        if fetchedFromDataBase == false {
+            if !loadingData && searchText.isEmpty {
+                pageCounter[sortType, default: 1] += 1
+                fetchMovies(with: sortType, on: getPage())
+            } else if !loadingData && !searchText.isEmpty {
+                searchPage += 1
+                fetchSearch(query: searchText, page: getPage())
+            }
         }
     }
     
@@ -138,10 +142,14 @@ final class DefaultFeedPresenter: FeedPresenter {
     
     // MARK: - Private Methods
     private func showLoadedMovies() {
-        movies = moviesStorage[sortType, default: []]
-        DispatchQueue.main.async {
-            self.view?.scrollToTop()
-            self.view?.reloadData()
+        if fetchedFromDataBase {
+            fetchMoviesFromDataBase()
+        } else {
+            movies = moviesStorage[sortType, default: []]
+            DispatchQueue.main.async {
+                self.view?.scrollToTop()
+                self.view?.reloadData()
+            }
         }
     }
     
@@ -162,6 +170,7 @@ final class DefaultFeedPresenter: FeedPresenter {
                 self.fetchMovies(with: self.sortType, on: self.getPage())
             case .failure(let error):
                 self.showError(error)
+                self.fetchMoviesFromDataBase()
             }
         }
     }
@@ -175,9 +184,11 @@ final class DefaultFeedPresenter: FeedPresenter {
             self.finishDataLoading()
             switch result {
             case .success(let movies):
+                self.fetchedFromDataBase = false
                 self.updateMovies(with: movies)
             case .failure(let error):
                 self.showError(error)
+                self.fetchMoviesFromDataBase()
             }
             completion?()
         }
@@ -194,7 +205,7 @@ final class DefaultFeedPresenter: FeedPresenter {
             case .failure(let error):
                 if let networkError = error as? NetworkError,
                     networkError == .noInternetConnection {
-                    self.searchInLoadedMovies()
+                    self.searchInStoredMovies()
                 } else {
                     self.showError(error)
                 }
@@ -211,6 +222,11 @@ final class DefaultFeedPresenter: FeedPresenter {
     
     private func updateMovies(with data: [MovieNetworkModel]) {
         moviesStorage[sortType, default: []] += transformToModel(data)
+        // Save to Core Data
+        transformToModel(data).forEach { movie in
+            DefaultCoreDataManager.shared.save(.movie(movie))
+        }
+        
         if let array = moviesStorage[sortType] {
             movies = array
             DispatchQueue.main.async {
@@ -219,18 +235,17 @@ final class DefaultFeedPresenter: FeedPresenter {
         }
     }
     
-    private func searchInLoadedMovies() {
-        if let array = moviesStorage[sortType] {
-            let localFilteredMovies = array.filter({
-                $0.title.lowercased().contains(self.searchText.lowercased())
-            })
-            if movies != localFilteredMovies {
-                movies = localFilteredMovies
-                DispatchQueue.main.async {
-                    self.view?.reloadData()
-                }
-                showError(NetworkError.noInternetConnection)
+    private func searchInStoredMovies() {
+        fetchMoviesFromDataBase()
+        let localFilteredMovies = movies.filter({
+            $0.title.lowercased().contains(self.searchText.lowercased())
+        })
+        if movies != localFilteredMovies {
+            movies = localFilteredMovies
+            DispatchQueue.main.async {
+                self.view?.reloadData()
             }
+            showError(NetworkError.noInternetConnection)
         }
     }
     
@@ -258,6 +273,17 @@ final class DefaultFeedPresenter: FeedPresenter {
         })
     }
     
+    private func transformToModel(_ movies: [Movie]) -> [MovieUIModel] {
+        return movies.compactMap({ movie in
+            return MovieUIModel(genres: movie.genres!,
+                                id: movie.id.intValue,
+                                voteAverage: movie.voteAverage,
+                                title: movie.title!,
+                                backdropPath: movie.backdropPath!,
+                                releaseDate: movie.releaseDate!)
+        })
+    }
+    
     private func showError(_ error: Error) {
         if let networkError = error as? NetworkError {
             self.view?.showMessage(title: "Error",
@@ -265,6 +291,22 @@ final class DefaultFeedPresenter: FeedPresenter {
         } else {
             self.view?.showMessage(title: "Error",
                                    message: error.localizedDescription)
+        }
+    }
+    
+    private func fetchMoviesFromDataBase() {
+        fetchedFromDataBase = true
+        DefaultCoreDataManager.shared.fetch(Movie.self) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let movies):
+                self.movies = self.transformToModel(movies)
+                DispatchQueue.main.async {
+                    self.view?.reloadData()
+                }
+            case .failure(let error):
+                self.showError(error)
+            }
         }
     }
     

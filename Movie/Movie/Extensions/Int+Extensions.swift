@@ -12,3 +12,9 @@ extension Int {
         return String(self)
     }
 }
+
+extension Int64 {
+    var intValue: Int {
+        return Int(self)
+    }
+}

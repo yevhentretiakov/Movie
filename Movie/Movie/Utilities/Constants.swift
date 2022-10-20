@@ -14,3 +14,4 @@ typealias MovieDetailsResult = (Result<MovieDetailModel, Error>) -> Void
 typealias MovieResult = (Result<[MovieNetworkModel], Error>) -> Void
 typealias MovieTrailerResult = (Result<MovieVideoModel?, Error>) -> Void
 typealias GenresResult = (Result<[GenreModel], Error>) -> Void
+typealias DataBlock<T> = (Result<[T], Error>) -> Void

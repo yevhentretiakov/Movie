@@ -26,6 +26,7 @@ final class DefaultNetworkManager: NetworkManager {
     
     // MARK: - Methods
     func request<T: Decodable>(_ type: T.Type, from endpoint: ApiEndpoint, completion: @escaping NetworkResult<T>) {
+        URLCache.shared = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
         request = AF.request(endpoint.url,
                    method: endpoint.method,
                    parameters: endpoint.parameters,
@@ -43,6 +44,7 @@ final class DefaultNetworkManager: NetworkManager {
                 }
             }
         }
+        
     }
     
     func cancel() {
