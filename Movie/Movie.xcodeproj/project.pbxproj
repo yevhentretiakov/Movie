@@ -24,6 +24,8 @@
 		CE4085292901328A006A2FDE /* DataAddable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4085282901328A006A2FDE /* DataAddable.swift */; };
 		CE40853329013436006A2FDE /* MovieData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE40853129013436006A2FDE /* MovieData.xcdatamodeld */; };
 		CE5C839A28DAE59B00F69B36 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C839928DAE59B00F69B36 /* Double+Extensions.swift */; };
+		CE7764012906739C00BC99AD /* Movie+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7763FF2906739C00BC99AD /* Movie+CoreDataClass.swift */; };
+		CE7764022906739C00BC99AD /* Movie+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7764002906739C00BC99AD /* Movie+CoreDataProperties.swift */; };
 		CE83AB1D28D9AA3E00546811 /* FeedBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE83AB1C28D9AA3E00546811 /* FeedBuilder.swift */; };
 		CE83AB1F28D9AA8700546811 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE83AB1E28D9AA8700546811 /* FeedViewController.swift */; };
 		CE83AB2128D9AC7C00546811 /* FeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE83AB2028D9AC7C00546811 /* FeedPresenter.swift */; };
@@ -83,6 +85,8 @@
 		CE4085282901328A006A2FDE /* DataAddable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAddable.swift; sourceTree = "<group>"; };
 		CE40853229013436006A2FDE /* MovieData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MovieData.xcdatamodel; sourceTree = "<group>"; };
 		CE5C839928DAE59B00F69B36 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
+		CE7763FF2906739C00BC99AD /* Movie+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataClass.swift"; sourceTree = "<group>"; };
+		CE7764002906739C00BC99AD /* Movie+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CE83AB1C28D9AA3E00546811 /* FeedBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedBuilder.swift; sourceTree = "<group>"; };
 		CE83AB1E28D9AA8700546811 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		CE83AB2028D9AC7C00546811 /* FeedPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPresenter.swift; sourceTree = "<group>"; };
@@ -299,6 +303,8 @@
 		CE40852D29013364006A2FDE /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				CE7763FF2906739C00BC99AD /* Movie+CoreDataClass.swift */,
+				CE7764002906739C00BC99AD /* Movie+CoreDataProperties.swift */,
 				CE40853129013436006A2FDE /* MovieData.xcdatamodeld */,
 			);
 			path = CoreData;
@@ -596,6 +602,7 @@
 				CE0C328828D89653004466B6 /* UINavigationController+Extensions.swift in Sources */,
 				CE98605B28E1CADC00DC3FB8 /* NetworkError.swift in Sources */,
 				CE0C328C28D896A2004466B6 /* NetworkManager.swift in Sources */,
+				CE7764022906739C00BC99AD /* Movie+CoreDataProperties.swift in Sources */,
 				CED8E3DE28DB39A60049BECD /* DetailPresenter.swift in Sources */,
 				CE0C326228D8935D004466B6 /* AppDelegate.swift in Sources */,
 				CE5C839A28DAE59B00F69B36 /* Double+Extensions.swift in Sources */,
@@ -620,6 +627,7 @@
 				CE0C326428D8935D004466B6 /* SceneDelegate.swift in Sources */,
 				CE849A7C28F06257001709DA /* UIImageView+Extensions.swift in Sources */,
 				CED8E3E728DB3C540049BECD /* DetailRepository.swift in Sources */,
+				CE7764012906739C00BC99AD /* Movie+CoreDataClass.swift in Sources */,
 				CE9D391328E6F9B8007A2C60 /* PlayerViewController.swift in Sources */,
 				CE9D391628E6F9FF007A2C60 /* PlayerPresenter.swift in Sources */,
 				CED9DDF228DC64DD00C4E5D5 /* PosterViewController.swift in Sources */,

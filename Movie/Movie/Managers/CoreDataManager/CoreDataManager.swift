@@ -8,18 +8,9 @@
 import Foundation
 import CoreData
 
-protocol CoreDataManager {
-    func fetch<T: NSManagedObject>(_ object: T.Type,
-                                    predicate: NSPredicate?,
-                                    sortDescriptors: [NSSortDescriptor]?,
-                                    completion: @escaping DataBlock<T>)
-    func save(_ object: DataObject)
-    func getContext() -> NSManagedObjectContext
-}
-
-final class DefaultCoreDataManager: CoreDataManager {
+final class CoreDataManager {
     // MARK: - Properties
-    static let shared = DefaultCoreDataManager()
+    static let shared = CoreDataManager()
     private let containerName = "MovieData"
     
     private lazy var persistentContainer: NSPersistentContainer = {
@@ -43,12 +34,8 @@ final class DefaultCoreDataManager: CoreDataManager {
     
     // MARK: - Internal Methods
     func fetch<T: NSManagedObject>(_ object: T.Type,
-                                   predicate: NSPredicate? = nil,
-                                   sortDescriptors: [NSSortDescriptor]? = nil,
                                    completion: @escaping DataBlock<T>) {
         let request = NSFetchRequest<T>(entityName: String(describing: T.self))
-        request.predicate = predicate
-        request.sortDescriptors = sortDescriptors
         do {
             let data = try context.fetch(request)
             completion(.success(data))

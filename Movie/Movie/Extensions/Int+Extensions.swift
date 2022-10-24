@@ -11,6 +11,10 @@ extension Int {
     var stringValue: String {
         return String(self)
     }
+    
+    var int64Value: Int64 {
+        return Int64(self)
+    }
 }
 
 extension Int64 {
@@ -18,3 +22,4 @@ extension Int64 {
         return Int(self)
     }
 }
+
