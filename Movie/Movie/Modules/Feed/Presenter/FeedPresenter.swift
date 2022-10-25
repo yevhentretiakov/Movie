@@ -67,7 +67,7 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     private var sortType: MoviesSortType = .popular
     private var searchWorkItem: DispatchWorkItem? = nil
-    private var networkAvailable = true
+    private var isNetworkAvailable = true
     
     // MARK: - Life Cycle Methods
     init(view: FeedView,
@@ -96,7 +96,7 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     
     func loadMore() {
-        if networkAvailable {
+        if isNetworkAvailable {
             if !loadingData && searchText.isEmpty {
                 pageCounter[sortType, default: 1] += 1
                 fetchMovies(with: sortType, page: getPage())
@@ -167,7 +167,7 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     
     private func displayFetchedMovies(with data: [MovieUIModel]) {
-        if networkAvailable {
+        if isNetworkAvailable {
             moviesStorage[sortType, default: []] += data
             movies = moviesStorage[sortType, default: []]
         } else {
@@ -235,7 +235,7 @@ final class DefaultFeedPresenter: FeedPresenter {
         if let networkError = error as? NetworkError {
             view?.showMessage(title: "Error",
                                    message: networkError.message)
-            networkAvailable = false
+            isNetworkAvailable = false
         } else {
             view?.showMessage(title: "Error",
                                    message: error.localizedDescription)
