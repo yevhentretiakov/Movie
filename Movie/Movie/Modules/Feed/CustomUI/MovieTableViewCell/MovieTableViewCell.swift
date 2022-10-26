@@ -28,5 +28,6 @@ final class MovieTableViewCell: BaseTableViewCell {
         posterImageView.cornerRadius = posterCornerRadius
         underlayView.cornerRadius = posterCornerRadius
         underlayView.setShadow(color: .black, offset: .zero, opacity: 1, radius: 3)
+        selectionStyle = .none
     }
 }
