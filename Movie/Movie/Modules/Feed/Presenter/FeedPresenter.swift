@@ -39,7 +39,7 @@ protocol FeedView: AnyObject, Loadable {
 protocol FeedPresenter {
     func viewDidLoad()
     func getItemsCount() -> Int
-    func getItem(at index: Int) -> MovieUIModel
+    func getItem(at index: Int) -> MovieUIModel?
     func showMovieDetails(with index: Int)
     func loadMore()
     func selectSortType(_ type: MoviesSortType)
@@ -87,8 +87,8 @@ final class DefaultFeedPresenter: FeedPresenter {
         return movies.count
     }
     
-    func getItem(at index: Int) -> MovieUIModel {
-        return movies[index]
+    func getItem(at index: Int) -> MovieUIModel? {
+        return movies.indices.contains(index) ? movies[index] : nil
     }
     
     func showMovieDetails(with index: Int) {
@@ -173,9 +173,7 @@ final class DefaultFeedPresenter: FeedPresenter {
         } else {
             movies = data
         }
-        DispatchQueue.main.async {
-            self.view?.reloadData()
-        }
+        reloadData()
     }
     
     private func fetchSearch(query: String, page: Int) {
@@ -194,9 +192,7 @@ final class DefaultFeedPresenter: FeedPresenter {
     
     private func displaySearchedMovies(with data: [MovieUIModel]) {
         movies += data
-        DispatchQueue.main.async {
-            self.view?.reloadData()
-        }
+        reloadData()
     }
     
     private func startSearch() {
@@ -213,9 +209,7 @@ final class DefaultFeedPresenter: FeedPresenter {
         }
         if let movies = moviesStorage[sortType] {
             self.movies = movies
-            DispatchQueue.main.async {
-                self.view?.reloadData()
-            }
+            reloadData()
         } else {
             fetchMovies(with: sortType, page: getPage())
         }
@@ -227,8 +221,8 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     
     private func finishDataLoading() {
-        view?.hideLoadingView()
         loadingData = false
+        view?.hideLoadingView()
     }
     
     private func showError(_ error: Error) {
@@ -244,5 +238,11 @@ final class DefaultFeedPresenter: FeedPresenter {
     
     private func getPage() -> Int {
         return pageCounter[sortType, default: 1]
+    }
+    
+    private func reloadData() {
+        DispatchQueue.main.async {
+            self.view?.reloadData()
+        }
     }
 }

@@ -10,9 +10,15 @@ import Foundation
 extension String {
     static let empty = ""
     
-    func dateFromString(with format: String) -> Date? {
-        let dateFormatter = Date.dateFormatter
-        dateFormatter.dateFormat = format
+    func dateFromString() -> Date? {
+        let dateFormatter = Date.isoDateFormatter
+        dateFormatter.formatOptions = [
+            .withFullDate
+        ]
         return dateFormatter.date(from: self)
+    }
+    
+    func formatDateString(with format: String = "dd MMMM") -> String? {
+        return self.dateFromString()?.dateString(with: format)
     }
 }

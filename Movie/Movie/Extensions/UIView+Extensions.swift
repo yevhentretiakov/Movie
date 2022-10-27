@@ -32,4 +32,20 @@ extension UIView {
         layer.shadowRadius = radius
         layer.masksToBounds = false
     }
+    
+    func setGradient(with colors: [UIColor],
+                     direction: GradientDirection = .vertical) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = colors.compactMap({ $0.cgColor })
+        gradientLayer.startPoint = direction.startPoint
+        gradientLayer.endPoint = direction.endPoint
+        gradientLayer.frame = bounds
+        
+        // Remove existing gradient layer
+        if let existingLayer = (layer.sublayers?.compactMap { $0 as? CAGradientLayer })?.first {
+            existingLayer.removeFromSuperlayer()
+        }
+        
+        layer.insertSublayer(gradientLayer, at:0)
+    }
 }

@@ -9,12 +9,13 @@ import Foundation
 
 extension Date {
     static var dateFormatter = DateFormatter()
+    static var isoDateFormatter = ISO8601DateFormatter()
     
     static func getDate(from timeInterval: Double) -> Date {
         return Date(timeIntervalSince1970: timeInterval)
     }
     
-    func dateString(in format: String = "dd MMMM") -> String {
+    func dateString(with format: String = "dd MMMM") -> String {
         let formatter = Date.dateFormatter
         formatter.dateFormat = format
         return formatter.string(from: self)

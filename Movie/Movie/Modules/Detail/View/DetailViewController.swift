@@ -11,7 +11,8 @@ final class DetailViewController: UIViewController {
     // MARK: - Properties
     var presenter: DetailPresenter!
     private var loadingView: UIView?
-    
+    private let posterImageDefaultHeight: CGFloat = 250
+    @IBOutlet weak var posterImageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var countryLabel: UILabel!
@@ -20,11 +21,13 @@ final class DetailViewController: UIViewController {
     @IBOutlet private weak var ratingLabel: UILabel!
     @IBOutlet private weak var descriptionLabel: UILabel!
     @IBOutlet private weak var trailerButton: UIButton!
+    @IBOutlet private weak var bottomGradientView: UIView!
     
     // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
+        setupBottomGradientView()
     }
     
     // MARK: - Private Methods
@@ -34,6 +37,30 @@ final class DetailViewController: UIViewController {
     
     @IBAction private func didTapTrailerButton(_ sender: UIButton) {
         presenter.showTrailer()
+    }
+    
+    private func setupBottomGradientView() {
+        bottomGradientView.setGradient(with: [.systemBackground.withAlphaComponent(0),
+                                              .systemBackground])
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+extension DetailViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset
+
+        if offset.y < 0.0 {
+            posterImageViewHeightConstraint.constant = posterImageDefaultHeight
+            var transform = CATransform3DTranslate(CATransform3DIdentity, 0, offset.y, 0)
+            let scaleFactor = 1 + (-1 * offset.y / (posterImageViewHeightConstraint.constant / 2))
+            transform = CATransform3DScale(transform, scaleFactor, scaleFactor, 1)
+            posterImageView.layer.transform = transform
+        } else {
+            let newHeight = posterImageDefaultHeight - offset.y
+            posterImageViewHeightConstraint.constant = newHeight
+            posterImageView.layer.transform = CATransform3DIdentity
+        }
     }
 }
 
@@ -47,7 +74,7 @@ extension DetailViewController: DetailView {
         title = model.title
         posterImageView.setImage(with: model.backdropPath)
         titleLabel.text = model.title
-        yearLabel.text = model.releaseDate.dateFromString(with: "yyyy-MM-dd")?.dateString(in: "dd MMM yyyy") ?? ""
+        yearLabel.text = model.releaseDate.formatDateString(with: "dd MMMM yyyy")
         genreLabel.text = model.genres.map({ $0.name }).joined(separator: ", ")
         ratingLabel.text = model.voteAverage.toString(rounded: 1)
         countryLabel.text = model.productionCountries.map({ $0.name }).joined(separator: ", ")
