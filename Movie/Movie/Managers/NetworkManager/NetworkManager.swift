@@ -44,7 +44,6 @@ final class DefaultNetworkManager: NetworkManager {
                 }
             }
         }
-        
     }
     
     func cancel() {

@@ -48,13 +48,8 @@ final class DefaultFeedRepository: FeedRepository {
                     CoreDataManager.shared.save(.movie(movie))
                 }
                 completion(.success(self.toMovieModel(data.results)))
-            case .failure(let error):
-                if let networkError = error as? NetworkError,
-                   networkError == .noInternetConnection {
-                    self.fetchMoviesFromDataBase(completion: completion)
-                } else {
-                    completion(.failure(error))
-                }
+            case .failure(_):
+                self.fetchMoviesFromDataBase(completion: completion)
             }
         }
     }
@@ -67,13 +62,8 @@ final class DefaultFeedRepository: FeedRepository {
             switch result {
             case .success(let data):
                 completion(.success(self.toMovieModel(data.results)))
-            case .failure(let error):
-                if let networkError = error as? NetworkError,
-                   networkError == .noInternetConnection {
-                    self.fetchSearchFromDataBase(query: query, completion: completion)
-                } else {
-                    completion(.failure(error))
-                }
+            case .failure(_):
+                self.fetchSearchFromDataBase(query: query, completion: completion)
             }
         }
     }

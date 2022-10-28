@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import netfox
 
 final class FeedViewController: UIViewController {
     // MARK: - Properties
@@ -146,6 +147,10 @@ final class FeedViewController: UIViewController {
         } else {
             nothingFoundView.isHidden = true
         }
+    }
+    
+    @objc private func doubleTapped() {
+        print("Double tapped!")
     }
     
     // MARK: - Layout Methods
