@@ -17,6 +17,7 @@ final class FeedViewController: UIViewController {
         let tableView = UITableView()
         tableView.rowHeight = 250
         tableView.separatorStyle = .none
+        tableView.keyboardDismissMode = .interactive
         return tableView
     }()
     
@@ -53,7 +54,7 @@ final class FeedViewController: UIViewController {
         searchController.searchBar.autocapitalizationType = .none
         return searchController
     }()
-    
+
     private lazy var nothingFoundView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -72,7 +73,6 @@ final class FeedViewController: UIViewController {
         
         stackView.addArrangedSubview(image)
         stackView.addArrangedSubview(label)
-        
         stackView.isHidden = true
         return stackView
     }()
@@ -149,10 +149,6 @@ final class FeedViewController: UIViewController {
         }
     }
     
-    @objc private func doubleTapped() {
-        print("Double tapped!")
-    }
-    
     // MARK: - Layout Methods
     private func layout() {
         layoutMoviesTableView()
@@ -174,8 +170,8 @@ final class FeedViewController: UIViewController {
         view.addSubview(nothingFoundView)
         nothingFoundView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            nothingFoundView.centerXAnchor.constraint(equalTo: moviesTableView.centerXAnchor),
-            nothingFoundView.centerYAnchor.constraint(equalTo: moviesTableView.centerYAnchor)
+            nothingFoundView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nothingFoundView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200)
         ])
     }
 }
@@ -193,6 +189,10 @@ extension FeedViewController: FeedView {
     
     func scrollToTop() {
         moviesTableView.setContentOffset(.zero, animated: false)
+    }
+    
+    func hideSortButton() {
+        navigationItem.rightBarButtonItem = nil
     }
 }
 
@@ -224,9 +224,32 @@ extension FeedViewController: UITableViewDataSource {
         }
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if scrollView.contentOffset.y < 0 {
-            searchController.searchBar.resignFirstResponder()
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if presenter.isSearching(),
+           presenter.getItemsCount() > 0 {
+            let headerView = UIView.init(frame: .zero)
+            headerView.backgroundColor = .systemGray4
+            let label = UILabel()
+            label.text = "Showing \(presenter.getItemsCount()) of \(presenter.getTotalItemsCount())"
+            label.textColor = .label
+            headerView.addSubview(label)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                label.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+                label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            ])
+            return headerView
+        } else {
+            return UIView(frame: .zero)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if presenter.isSearching(),
+           presenter.getItemsCount() > 0 {
+            return 40
+        } else {
+            return 0
         }
     }
 }

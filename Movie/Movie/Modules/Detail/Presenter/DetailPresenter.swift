@@ -15,7 +15,7 @@ protocol DetailView: AnyObject, Loadable {
 }
 
 protocol DetailPresenter {
-    func viewDidLoad()
+    func viewWillAppear()
     func showPoster()
     func showTrailer()
 }
@@ -28,6 +28,7 @@ final class DefaultDetailPresenter: DetailPresenter {
     private let movieId: Int
     private var videoId: String?
     private var movie: MovieDetailModel?
+    private var isLoaded = false
     
     // MARK: - Life Cycle Methods
     init(view: DetailView,
@@ -40,9 +41,11 @@ final class DefaultDetailPresenter: DetailPresenter {
         self.repository = repository
     }
     
-    // MARK: - Internal Methods
-    func viewDidLoad() {
-        showMovieDetails()
+    // MARK: - Internal Methods    
+    func viewWillAppear() {
+        if !isLoaded {
+            showMovieDetails()
+        }
     }
     
     func showPoster() {
@@ -78,7 +81,7 @@ final class DefaultDetailPresenter: DetailPresenter {
                     self.view?.displayMovie(with: movie)
                 }
                 self.view?.updateTrailerConditions(self.videoId != nil)
-                self.view?.hideLoadingView()
+                self.isLoaded = true
             }
         }
     }
@@ -91,10 +94,10 @@ final class DefaultDetailPresenter: DetailPresenter {
                 self.movie = movie
             case .failure(let error):
                 if let error = error as? NetworkError {
-                    self.view?.showMessage(title: "Error",
+                    self.view?.showMessage(title: "Warning",
                                            message: error.message)
                 } else {
-                    self.view?.showMessage(title: "Error",
+                    self.view?.showMessage(title: "Warning",
                                            message: error.localizedDescription)
                 }
                 self.router.close()

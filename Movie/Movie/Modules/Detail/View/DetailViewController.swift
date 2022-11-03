@@ -11,7 +11,6 @@ final class DetailViewController: UIViewController {
     // MARK: - Properties
     var presenter: DetailPresenter!
     private var loadingView: UIView?
-    private let posterImageDefaultHeight: CGFloat = 250
     @IBOutlet weak var posterImageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
@@ -23,11 +22,24 @@ final class DetailViewController: UIViewController {
     @IBOutlet private weak var trailerButton: UIButton!
     @IBOutlet private weak var bottomGradientView: UIView!
     
+    @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private weak var contentView: UIView!
+    @IBOutlet private weak var infoStackView: UIStackView!
+    
+    private let posterImageDefaultHeight: CGFloat = 250
+    private let parallaxImageMinHeight: CGFloat = 100
+    private let scrollViewBottomPadding: CGFloat = 100
+    private let spaceBetweenImageAndInfo: CGFloat = 10
+    
     // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.viewDidLoad()
         setupBottomGradientView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
     }
     
     // MARK: - Private Methods
@@ -48,18 +60,26 @@ final class DetailViewController: UIViewController {
 // MARK: - UIScrollViewDelegate
 extension DetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = scrollView.contentOffset
-
-        if offset.y < 0.0 {
-            posterImageViewHeightConstraint.constant = posterImageDefaultHeight
-            var transform = CATransform3DTranslate(CATransform3DIdentity, 0, offset.y, 0)
-            let scaleFactor = 1 + (-1 * offset.y / (posterImageViewHeightConstraint.constant / 2))
-            transform = CATransform3DScale(transform, scaleFactor, scaleFactor, 1)
-            posterImageView.layer.transform = transform
-        } else {
-            let newHeight = posterImageDefaultHeight - offset.y
-            posterImageViewHeightConstraint.constant = newHeight
-            posterImageView.layer.transform = CATransform3DIdentity
+        if scrollView.contentSize.height != 0 {
+            let offset = scrollView.contentOffset
+            if offset.y < 0.0 {
+                posterImageViewHeightConstraint.constant = posterImageDefaultHeight
+                var transform = CATransform3DTranslate(CATransform3DIdentity, 0, offset.y, 0)
+                let scaleFactor = 1 + (-1 * offset.y / (posterImageViewHeightConstraint.constant / 2))
+                transform = CATransform3DScale(transform, scaleFactor, scaleFactor, 1)
+                posterImageView.layer.transform = transform
+            } else {
+                let newImageHeight = posterImageDefaultHeight - offset.y
+                if newImageHeight > parallaxImageMinHeight {
+                    let contentHeight: CGFloat = newImageHeight + infoStackView.bounds.height + spaceBetweenImageAndInfo + scrollViewBottomPadding
+                    let maxYOffset = contentHeight - scrollView.bounds.height + scrollView.safeAreaInsets.bottom
+                    
+                    if offset.y < maxYOffset {
+                        posterImageViewHeightConstraint.constant = newImageHeight
+                        posterImageView.layer.transform = CATransform3DIdentity
+                    }
+                }
+            }
         }
     }
 }
@@ -72,7 +92,10 @@ extension DetailViewController: DetailView {
     
     func displayMovie(with model: MovieDetailModel) {
         title = model.title
-        posterImageView.setImage(with: model.backdropPath)
+        posterImageView.setImage(with: model.backdropPath, resolution: .high) { [weak self] _ in
+            guard let self = self else { return }
+            self.hideLoadingView()
+        }
         titleLabel.text = model.title
         yearLabel.text = model.releaseDate.formatDateString(with: "dd MMMM yyyy")
         genreLabel.text = model.genres.map({ $0.name }).joined(separator: ", ")

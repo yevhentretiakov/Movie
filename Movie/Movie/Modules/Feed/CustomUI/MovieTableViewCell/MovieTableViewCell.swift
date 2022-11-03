@@ -22,8 +22,16 @@ final class MovieTableViewCell: BaseTableViewCell {
     // MARK: - Life Cycle Methods
     override func layoutSubviews() {
         super.layoutSubviews()
-        topInfoStackView.setGradient(with: [.black, .clear])
-        bottomInfoStackView.setGradient(with: [.clear, .black])
+        let gradientColors: [UIColor] = [.black,
+                              .black.withAlphaComponent(0.9),
+                              .black.withAlphaComponent(0.8),
+                              .black.withAlphaComponent(0.2),
+                              .black.withAlphaComponent(0.1),
+                              .clear]
+        topInfoStackView.setGradient(with: gradientColors,
+                                     locations: [0, 0.2, 0.3, 0.7, 0.8, 1])
+        bottomInfoStackView.setGradient(with: gradientColors.reversed(),
+                                        locations: [0, 0.2, 0.3, 0.7, 0.8, 1])
     }
     
     // MARK: - Internal Methods

@@ -34,11 +34,13 @@ extension UIView {
     }
     
     func setGradient(with colors: [UIColor],
-                     direction: GradientDirection = .vertical) {
+                     direction: GradientDirection = .vertical,
+                     locations: [NSNumber] = [0, 1]) {
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = colors.compactMap({ $0.cgColor })
         gradientLayer.startPoint = direction.startPoint
         gradientLayer.endPoint = direction.endPoint
+        gradientLayer.locations = locations
         gradientLayer.frame = bounds
         
         // Remove existing gradient layer

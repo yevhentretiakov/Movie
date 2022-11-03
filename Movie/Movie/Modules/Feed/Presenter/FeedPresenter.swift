@@ -34,6 +34,7 @@ protocol FeedView: AnyObject, Loadable {
     func reloadData()
     func showMessage(title: String, message: String)
     func scrollToTop()
+    func hideSortButton()
 }
 
 protocol FeedPresenter {
@@ -45,6 +46,8 @@ protocol FeedPresenter {
     func selectSortType(_ type: MoviesSortType)
     func search(with string: String)
     func cancelSearch()
+    func isSearching() -> Bool
+    func getTotalItemsCount() -> Int
 }
 
 final class DefaultFeedPresenter: FeedPresenter {
@@ -68,6 +71,7 @@ final class DefaultFeedPresenter: FeedPresenter {
     private var sortType: MoviesSortType = .popular
     private var searchWorkItem: DispatchWorkItem? = nil
     private var isNetworkAvailable = true
+    private var totalResults = 0
     
     // MARK: - Life Cycle Methods
     init(view: FeedView,
@@ -92,11 +96,16 @@ final class DefaultFeedPresenter: FeedPresenter {
     }
     
     func showMovieDetails(with index: Int) {
-        router.showMovieDetails(with: movies[index].id)
+        if isNetworkAvailable {
+            router.showMovieDetails(with: movies[index].id)
+        } else {
+            showError(NetworkError.noInternetConnection)
+        }
     }
     
     func loadMore() {
-        if isNetworkAvailable {
+        if isNetworkAvailable,
+           movies.count < totalResults {
             if !loadingData && searchText.isEmpty {
                 pageCounter[sortType, default: 1] += 1
                 fetchMovies(with: sortType, page: getPage())
@@ -133,6 +142,14 @@ final class DefaultFeedPresenter: FeedPresenter {
         displayMovies()
     }
     
+    func isSearching() -> Bool {
+        return !searchText.isEmpty
+    }
+    
+    func getTotalItemsCount() -> Int {
+        return totalResults
+    }
+    
     // MARK: - Private Methods
     private func fetchGenres() {
         repository.fetchGenres { [weak self] result in
@@ -158,7 +175,8 @@ final class DefaultFeedPresenter: FeedPresenter {
             self.finishDataLoading()
             switch result {
             case .success(let movies):
-                self.displayFetchedMovies(with: movies)
+                self.displayFetchedMovies(with: movies.0)
+                self.totalResults = movies.1
             case .failure(let error):
                 self.showError(error)
             }
@@ -183,7 +201,8 @@ final class DefaultFeedPresenter: FeedPresenter {
             self.finishDataLoading()
             switch result {
             case .success(let movies):
-                self.displaySearchedMovies(with: movies)
+                self.displaySearchedMovies(with: movies.0)
+                self.totalResults = movies.1
             case .failure(let error):
                 self.showError(error)
             }
@@ -227,11 +246,12 @@ final class DefaultFeedPresenter: FeedPresenter {
     
     private func showError(_ error: Error) {
         if let networkError = error as? NetworkError {
-            view?.showMessage(title: "Error",
+            view?.showMessage(title: "Warning",
                                    message: networkError.message)
             isNetworkAvailable = false
+            view?.hideSortButton()
         } else {
-            view?.showMessage(title: "Error",
+            view?.showMessage(title: "Warning",
                                    message: error.localizedDescription)
         }
     }
