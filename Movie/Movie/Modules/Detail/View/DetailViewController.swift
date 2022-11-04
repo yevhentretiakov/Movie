@@ -35,6 +35,8 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBottomGradientView()
+        setupNavigationBar()
+        setupScrollView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,8 +54,19 @@ final class DetailViewController: UIViewController {
     }
     
     private func setupBottomGradientView() {
-        bottomGradientView.setGradient(with: [.systemBackground.withAlphaComponent(0),
-                                              .systemBackground])
+        bottomGradientView.setGradient(with: [.systemBackground,
+                                              .systemBackground.withAlphaComponent(0)],
+                                       direction: .bottomToTop)
+    }
+    
+    private func setupNavigationBar() {
+        title = .empty
+    }
+    
+    private func setupScrollView() {
+        scrollView.alwaysBounceVertical = true
+        scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+        scrollView.alpha = 0
     }
 }
 
@@ -68,17 +81,6 @@ extension DetailViewController: UIScrollViewDelegate {
                 let scaleFactor = 1 + (-1 * offset.y / (posterImageViewHeightConstraint.constant / 2))
                 transform = CATransform3DScale(transform, scaleFactor, scaleFactor, 1)
                 posterImageView.layer.transform = transform
-            } else {
-                let newImageHeight = posterImageDefaultHeight - offset.y
-                if newImageHeight > parallaxImageMinHeight {
-                    let contentHeight: CGFloat = newImageHeight + infoStackView.bounds.height + spaceBetweenImageAndInfo + scrollViewBottomPadding
-                    let maxYOffset = contentHeight - scrollView.bounds.height + scrollView.safeAreaInsets.bottom
-                    
-                    if offset.y < maxYOffset {
-                        posterImageViewHeightConstraint.constant = newImageHeight
-                        posterImageView.layer.transform = CATransform3DIdentity
-                    }
-                }
             }
         }
     }
@@ -91,9 +93,11 @@ extension DetailViewController: DetailView {
     }
     
     func displayMovie(with model: MovieDetailModel) {
-        title = model.title
         posterImageView.setImage(with: model.backdropPath, resolution: .high) { [weak self] _ in
             guard let self = self else { return }
+            UIView.animate(withDuration: 0.5) {
+                self.scrollView.alpha = 1
+            }
             self.hideLoadingView()
         }
         titleLabel.text = model.title

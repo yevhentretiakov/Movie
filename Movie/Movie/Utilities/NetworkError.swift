@@ -8,12 +8,15 @@
 import Foundation
 
 enum NetworkError: Error {
+    case somethingWrong
     case noInternetConnection
     
     var message: String {
         switch self {
         case .noInternetConnection:
             return "You are offline. Please, enable your Wi-Fi or connect using cellular data."
+        case .somethingWrong:
+            return "Something went wrong."
         }
     }
 }

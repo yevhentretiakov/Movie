@@ -14,24 +14,28 @@ final class MovieTableViewCell: BaseTableViewCell {
     @IBOutlet private weak var genresLabel: UILabel!
     @IBOutlet private weak var ratingLabel: UILabel!
     @IBOutlet private weak var posterImageView: UIImageView!
-    private let posterCornerRadius: CGFloat = 10
     @IBOutlet private weak var topInfoStackView: UIStackView!
     @IBOutlet private weak var bottomInfoStackView: UIStackView!
     @IBOutlet private weak var infoStackView: UIStackView!
     
+    private let posterCornerRadius: CGFloat = 10
+    private let gradientColors: [UIColor] = [.black.withAlphaComponent(0.8),
+                                             .black.withAlphaComponent(0.7),
+                                             .black.withAlphaComponent(0.5),
+                                             .black.withAlphaComponent(0.3),
+                                             .black.withAlphaComponent(0.1),
+                                             .black.withAlphaComponent(0)]
+    private let gradientLocations: [NSNumber] = [0, 0.2, 0.4, 0.6, 0.8, 1]
+    
     // MARK: - Life Cycle Methods
     override func layoutSubviews() {
         super.layoutSubviews()
-        let gradientColors: [UIColor] = [.black,
-                              .black.withAlphaComponent(0.9),
-                              .black.withAlphaComponent(0.8),
-                              .black.withAlphaComponent(0.2),
-                              .black.withAlphaComponent(0.1),
-                              .clear]
         topInfoStackView.setGradient(with: gradientColors,
-                                     locations: [0, 0.2, 0.3, 0.7, 0.8, 1])
-        bottomInfoStackView.setGradient(with: gradientColors.reversed(),
-                                        locations: [0, 0.2, 0.3, 0.7, 0.8, 1])
+                                     direction: .topToBottom,
+                                     locations: gradientLocations)
+        bottomInfoStackView.setGradient(with: gradientColors,
+                                        direction: .bottomToTop,
+                                        locations: gradientLocations)
     }
     
     // MARK: - Internal Methods

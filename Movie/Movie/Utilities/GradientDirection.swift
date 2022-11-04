@@ -13,7 +13,8 @@ protocol Line {
 }
 
 enum GradientDirection {
-    case vertical
+    case topToBottom
+    case bottomToTop
     case horizontal
 }
 
@@ -22,8 +23,10 @@ extension GradientDirection: Line {
         switch self {
         case .horizontal:
             return CGPoint(x: 0, y: 1)
-        case .vertical:
+        case .topToBottom:
             return CGPoint(x: 0, y: 0)
+        case .bottomToTop:
+            return CGPoint(x: 0, y: 1)
         }
     }
     
@@ -31,8 +34,10 @@ extension GradientDirection: Line {
         switch self {
         case .horizontal:
             return CGPoint(x: 1, y: 1)
-        case .vertical:
+        case .topToBottom:
             return CGPoint(x: 0, y: 1)
+        case .bottomToTop:
+            return CGPoint(x: 0, y: 0)
         }
     }
 }

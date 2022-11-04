@@ -252,7 +252,7 @@ final class DefaultFeedPresenter: FeedPresenter {
             view?.hideSortButton()
         } else {
             view?.showMessage(title: "Warning",
-                                   message: error.localizedDescription)
+                              message: NetworkError.somethingWrong.message)
         }
     }
     

@@ -98,7 +98,7 @@ final class DefaultDetailPresenter: DetailPresenter {
                                            message: error.message)
                 } else {
                     self.view?.showMessage(title: "Warning",
-                                           message: error.localizedDescription)
+                                           message: NetworkError.somethingWrong.message)
                 }
                 self.router.close()
             }
