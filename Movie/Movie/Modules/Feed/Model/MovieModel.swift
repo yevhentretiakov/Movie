@@ -10,10 +10,12 @@ import Foundation
 // MARK: - Response Data
 struct MoviesResponse: Codable {
     let results: [MovieNetworkModel]
+    let totalResults: Int
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.results = try container.decodeIfPresent([MovieNetworkModel].self, forKey: .results) ?? .emptyList
+        self.totalResults = try container.decodeIfPresent(Int.self, forKey: .totalResults) ?? .zero
     }
 }
 

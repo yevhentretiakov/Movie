@@ -14,19 +14,40 @@ final class MovieTableViewCell: BaseTableViewCell {
     @IBOutlet private weak var genresLabel: UILabel!
     @IBOutlet private weak var ratingLabel: UILabel!
     @IBOutlet private weak var posterImageView: UIImageView!
-    @IBOutlet private weak var underlayView: UIView!
+    @IBOutlet private weak var topInfoStackView: UIStackView!
+    @IBOutlet private weak var bottomInfoStackView: UIStackView!
+    @IBOutlet private weak var infoStackView: UIStackView!
+    
     private let posterCornerRadius: CGFloat = 10
+    private let gradientColors: [UIColor] = [.black.withAlphaComponent(0.8),
+                                             .black.withAlphaComponent(0.7),
+                                             .black.withAlphaComponent(0.5),
+                                             .black.withAlphaComponent(0.3),
+                                             .black.withAlphaComponent(0.1),
+                                             .black.withAlphaComponent(0)]
+    private let gradientLocations: [NSNumber] = [0, 0.2, 0.4, 0.6, 0.8, 1]
+    
+    // MARK: - Life Cycle Methods
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        topInfoStackView.setGradient(with: gradientColors,
+                                     direction: .topToBottom,
+                                     locations: gradientLocations)
+        bottomInfoStackView.setGradient(with: gradientColors,
+                                        direction: .bottomToTop,
+                                        locations: gradientLocations)
+    }
     
     // MARK: - Internal Methods
     func configure(with model: MovieUIModel) {
         posterImageView.image = nil
         titleLabel.text = model.title
-        yearLabel.text = model.releaseDate
+        yearLabel.text = model.releaseDate.formatDateString(with: "dd MMMM yyyy")
         ratingLabel.text = model.voteAverage.toString(rounded: 1)
         genresLabel.text = model.genres.joined(separator: ", ")
         posterImageView.setImage(with: model.backdropPath)
         posterImageView.cornerRadius = posterCornerRadius
-        underlayView.cornerRadius = posterCornerRadius
-        underlayView.setShadow(color: .black, offset: .zero, opacity: 1, radius: 3)
+        infoStackView.cornerRadius = posterCornerRadius
+        selectionStyle = .none
     }
 }

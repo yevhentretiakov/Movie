@@ -9,8 +9,21 @@ import UIKit
 import Kingfisher
 
 extension UIImageView {
-    func setImage(with remotePath: String, resolution: ImageResolution = .low) {
+    func setImage(with remotePath: String,
+                  resolution: ImageResolution = .low,
+                  completion: ImageBlock? = nil) {
         self.kf.setImage(with: DefaultImageManager.shared.buildURL(with: remotePath,
-                                                                   resolution: resolution))
+                                                                   resolution: resolution),
+                         placeholder: UIImage(named: "ImagePlaceholder")) { result in
+            if let completion = completion {
+                switch result {
+                case .success(let result):
+                        completion(.success(result.image))
+                case .failure(let error):
+                        completion(.failure(error))
+                }
+            }
+        }
     }
 }
+

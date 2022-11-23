@@ -47,14 +47,9 @@ final class DefaultFeedRepository: FeedRepository {
                 self.toMovieModel(data.results).forEach { movie in
                     CoreDataManager.shared.save(.movie(movie))
                 }
-                completion(.success(self.toMovieModel(data.results)))
-            case .failure(let error):
-                if let networkError = error as? NetworkError,
-                   networkError == .noInternetConnection {
-                    self.fetchMoviesFromDataBase(completion: completion)
-                } else {
-                    completion(.failure(error))
-                }
+                completion(.success((self.toMovieModel(data.results), data.totalResults)))
+            case .failure(_):
+                self.fetchMoviesFromDataBase(completion: completion)
             }
         }
     }
@@ -66,14 +61,9 @@ final class DefaultFeedRepository: FeedRepository {
             guard let self = self else { return }
             switch result {
             case .success(let data):
-                completion(.success(self.toMovieModel(data.results)))
-            case .failure(let error):
-                if let networkError = error as? NetworkError,
-                   networkError == .noInternetConnection {
-                    self.fetchSearchFromDataBase(query: query, completion: completion)
-                } else {
-                    completion(.failure(error))
-                }
+                completion(.success((self.toMovieModel(data.results), data.totalResults)))
+            case .failure(_):
+                self.fetchSearchFromDataBase(query: query, completion: completion)
             }
         }
     }
@@ -84,7 +74,7 @@ final class DefaultFeedRepository: FeedRepository {
             guard let self = self else { return }
             switch result {
             case .success(let movies):
-                completion(.success(self.toMovieModel(movies)))
+                completion(.success((self.toMovieModel(movies), movies.count)))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -96,10 +86,10 @@ final class DefaultFeedRepository: FeedRepository {
             guard self != nil else { return }
             switch result {
             case .success(let movies):
-                let filteredMovies = movies.filter({
+                let filteredMovies = movies.0.filter({
                     $0.title.lowercased().contains(query.lowercased())
                 })
-                completion(.success(filteredMovies))
+                completion(.success((filteredMovies, filteredMovies.count)))
             case .failure(let error):
                 completion(.failure(error))
             }

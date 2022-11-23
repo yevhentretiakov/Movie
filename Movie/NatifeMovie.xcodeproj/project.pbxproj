@@ -23,6 +23,7 @@
 		CE4085272901325E006A2FDE /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4085262901325E006A2FDE /* CoreDataManager.swift */; };
 		CE4085292901328A006A2FDE /* DataAddable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4085282901328A006A2FDE /* DataAddable.swift */; };
 		CE40853329013436006A2FDE /* MovieData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE40853129013436006A2FDE /* MovieData.xcdatamodeld */; };
+		CE574EFD290957C000CC6831 /* GradientDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE574EFC290957C000CC6831 /* GradientDirection.swift */; };
 		CE5C839A28DAE59B00F69B36 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C839928DAE59B00F69B36 /* Double+Extensions.swift */; };
 		CE7764012906739C00BC99AD /* Movie+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7763FF2906739C00BC99AD /* Movie+CoreDataClass.swift */; };
 		CE7764022906739C00BC99AD /* Movie+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7764002906739C00BC99AD /* Movie+CoreDataProperties.swift */; };
@@ -50,6 +51,7 @@
 		CE9D392228E70E7B007A2C60 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D392128E70E7B007A2C60 /* Kingfisher */; };
 		CE9D392528E70E91007A2C60 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D392428E70E91007A2C60 /* Alamofire */; };
 		CEB0306529001DFF00FEA520 /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB0306429001DFF00FEA520 /* Collection+Extensions.swift */; };
+		CEBB71D6290ABDC40028226F /* netfox in Frameworks */ = {isa = PBXBuildFile; productRef = CEBB71D5290ABDC40028226F /* netfox */; };
 		CED8E3D228DB2BCA0049BECD /* GenreModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED8E3D128DB2BCA0049BECD /* GenreModel.swift */; };
 		CED8E3DC28DB39710049BECD /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED8E3DB28DB39710049BECD /* DetailViewController.swift */; };
 		CED8E3DE28DB39A60049BECD /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED8E3DD28DB39A60049BECD /* DetailPresenter.swift */; };
@@ -84,6 +86,7 @@
 		CE4085262901325E006A2FDE /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		CE4085282901328A006A2FDE /* DataAddable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAddable.swift; sourceTree = "<group>"; };
 		CE40853229013436006A2FDE /* MovieData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MovieData.xcdatamodel; sourceTree = "<group>"; };
+		CE574EFC290957C000CC6831 /* GradientDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientDirection.swift; sourceTree = "<group>"; };
 		CE5C839928DAE59B00F69B36 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		CE7763FF2906739C00BC99AD /* Movie+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CE7764002906739C00BC99AD /* Movie+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -130,6 +133,7 @@
 			files = (
 				CE9D392528E70E91007A2C60 /* Alamofire in Frameworks */,
 				CE9D392228E70E7B007A2C60 /* Kingfisher in Frameworks */,
+				CEBB71D6290ABDC40028226F /* netfox in Frameworks */,
 				CE9D391F28E70D6B007A2C60 /* YouTubeiOSPlayerHelper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,6 +291,7 @@
 				CE0C328528D89629004466B6 /* Constants.swift */,
 				CE98605A28E1CADC00DC3FB8 /* NetworkError.swift */,
 				CE9983A828E5C16F00F7D50F /* Loadable.swift */,
+				CE574EFC290957C000CC6831 /* GradientDirection.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -530,6 +535,7 @@
 				CE9D391E28E70D6B007A2C60 /* YouTubeiOSPlayerHelper */,
 				CE9D392128E70E7B007A2C60 /* Kingfisher */,
 				CE9D392428E70E91007A2C60 /* Alamofire */,
+				CEBB71D5290ABDC40028226F /* netfox */,
 			);
 			productName = Movie;
 			productReference = CE0C325E28D8935D004466B6 /* Movie.app */;
@@ -550,7 +556,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CE0C325928D8935D004466B6 /* Build configuration list for PBXProject "Movie" */;
+			buildConfigurationList = CE0C325928D8935D004466B6 /* Build configuration list for PBXProject "NatifeMovie" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -563,6 +569,7 @@
 				CE9D391D28E70D6B007A2C60 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
 				CE9D392028E70E7B007A2C60 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				CE9D392328E70E91007A2C60 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				CEBB71D4290ABDC40028226F /* XCRemoteSwiftPackageReference "netfox" */,
 			);
 			productRefGroup = CE0C325F28D8935D004466B6 /* Products */;
 			projectDirPath = "";
@@ -627,6 +634,7 @@
 				CE0C326428D8935D004466B6 /* SceneDelegate.swift in Sources */,
 				CE849A7C28F06257001709DA /* UIImageView+Extensions.swift in Sources */,
 				CED8E3E728DB3C540049BECD /* DetailRepository.swift in Sources */,
+				CE574EFD290957C000CC6831 /* GradientDirection.swift in Sources */,
 				CE7764012906739C00BC99AD /* Movie+CoreDataClass.swift in Sources */,
 				CE9D391328E6F9B8007A2C60 /* PlayerViewController.swift in Sources */,
 				CE9D391628E6F9FF007A2C60 /* PlayerPresenter.swift in Sources */,
@@ -782,8 +790,10 @@
 				DEVELOPMENT_TEAM = FC6QKWA93F;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Movie/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NatifeMovie;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -791,7 +801,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.swifter.Movie;
+				PRODUCT_BUNDLE_IDENTIFIER = me.swifter.movie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -809,8 +819,10 @@
 				DEVELOPMENT_TEAM = FC6QKWA93F;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Movie/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NatifeMovie;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -818,7 +830,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.swifter.Movie;
+				PRODUCT_BUNDLE_IDENTIFIER = me.swifter.movie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -829,7 +841,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE0C325928D8935D004466B6 /* Build configuration list for PBXProject "Movie" */ = {
+		CE0C325928D8935D004466B6 /* Build configuration list for PBXProject "NatifeMovie" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE0C327028D8935F004466B6 /* Debug */,
@@ -874,6 +886,14 @@
 				kind = branch;
 			};
 		};
+		CEBB71D4290ABDC40028226F /* XCRemoteSwiftPackageReference "netfox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kasketis/netfox";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -891,6 +911,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CE9D392328E70E91007A2C60 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		CEBB71D5290ABDC40028226F /* netfox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEBB71D4290ABDC40028226F /* XCRemoteSwiftPackageReference "netfox" */;
+			productName = netfox;
 		};
 /* End XCSwiftPackageProductDependency section */
 

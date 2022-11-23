@@ -19,14 +19,17 @@ struct TagConstants {
 
 extension Loadable where Self: UIViewController {
     func showLoadingView() {
-        let loadingView = UIView(frame: self.view.bounds)
-        loadingView.backgroundColor = .systemBackground
-        loadingView.alpha = 0.5
+        let loadingView = UIView(frame: .zero)
+        
+        let underlayView = UIView(frame: self.view.bounds)
+        underlayView.backgroundColor = .systemBackground
+        underlayView.alpha = 0.5
         
         let activityIndicator = UIActivityIndicatorView.init(style: .large)
         activityIndicator.startAnimating()
-        activityIndicator.center = loadingView.center
+        activityIndicator.center = self.view.center
         
+        loadingView.addSubview(underlayView)
         loadingView.addSubview(activityIndicator)
         
         DispatchQueue.main.async {
